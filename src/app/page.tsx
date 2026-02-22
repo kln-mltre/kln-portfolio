@@ -124,7 +124,7 @@ const InceptionCase = () => {
     const capture = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
-      setScreenshotUrl(`/api/screenshot?w=${w}&h=${h}&t=${Date.now()}`);
+      setScreenshotUrl(`/api/screenshot?w=${w}&h=${h}`);
     };
 
     capture();
