@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kylian Malartre
 
-## Getting Started
+An interactive digital identity and project showcase built to explore and refine my programming skills. The project is live and hosted at [kylianmalartre.com](https://kylianmalartre.com).
 
-First, run the development server:
+This portfolio utilizes a **Bento Grid** architecture to organize disparate projects into a cohesive experience. It features real-time system monitoring, recursive visual components, and custom-filtered SVG aesthetics to create a unique, high-fidelity atmosphere.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Screenshot
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Desktop Overview
+<img src="assets/preview.png" alt="Portfolio Overview" width="800"/>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- **Recursive "Inception" Engine:** A self-referencing card capturing the live viewport via an internal API (`/api/screenshot`). It implements a three-phase "dive" animation (Detach, Morph, Reset) using `requestAnimationFrame` to simulate a seamless entry into the recursive frame.
+- **Concurrent System Probing:** Real-time environment analysis executing concurrent `Promise.all` tasks to fetch IP/ISP metadata and calculate network latency via `performance.now()` measurements.
+- **Analog Narrative Engine (Valentine):** An integrated visual system combining `feDisplacementMap` SVG filters for "pencil-drawn" textures, `clip-path` polygons for 3D envelope physics, and a custom stop-motion `MiniSticker` component for randomized sprite-toggling.
+- **UX & Performance Optimization:** Implementation of a `ZoomLock` component and viewport constraints to prevent accidental scaling on mobile devices. Uses hydration-safe logic to prevent SSR/CSR mismatches during system data fetching.
+- **Technical SEO Integration:** Advanced metadata management using Next.js 15, featuring JSON-LD structured data injection for Google Person schemas and canonical URL synchronization.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Icons:** Lucide React (System & Project iconography)
+- **Optimization:** Next/Font (Local optimization for Pixel and Handwritten typography)
 
-## Deploy on Vercel
+## Featured Projects
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* **KlipScheduler**: Full automation of TikTok clip scheduling and publishing using Python and Playwright.
+* **KlipMachine**: AI-powered pipeline (Whisper AI / FFmpeg) to transform long-form content into viral clips.
+* **margaux-love-letter**: An interactive, mobile-optimized stop-motion narrative experience.
+* **net-a22**: Low-level logic puzzle game built with C and the SDL library.
