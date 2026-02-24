@@ -1341,10 +1341,10 @@ export default function Home() {
                   <div className="absolute inset-0 z-40" style={{ ...envelopeFlapStyle, backgroundColor: "#e4d8c0", clipPath: "polygon(0 0, 100% 0, 50% 55%)" }}>
                     <svg className="absolute inset-0 w-full h-full" viewBox="0 0 250 135">
                         {/* V-notch path heavier stroke survives the displacement filter without breaking apart */}
-                        <path style={{ filter: "url(#pencil-filter)" }} stroke="#5a4a42" strokeWidth="4" fill="none" d="M 2 2 L 125 74 L 248 2" />
+                        <path style={{ filter: "url(#pencil-filter)" }} stroke="#5a4a42" strokeWidth="7" fill="none" d="M 2 2 L 125 74 L 248 2" />
                         
                         {/* Top edge path lighter stroke cleanly closes the envelope outline */}
-                        <path style={{ filter: "url(#pencil-filter)" }} stroke="#5a4a42" strokeWidth="3" fill="none" d="M 2 2 Q 125 4.5 248 3" />
+                        <path style={{ filter: "url(#pencil-filter)" }} stroke="#5a4a42" strokeWidth="4" fill="none" d="M 2 -3 Q 125 4.5 248 3" />
                     </svg>
                   </div>
 
