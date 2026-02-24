@@ -2,7 +2,7 @@
 
 An interactive digital identity and project showcase built to explore and refine my programming skills. The project is live and hosted at [kylianmalartre.com](https://kylianmalartre.com).
 
-This portfolio utilizes a **Bento Grid** architecture to organize disparate projects into a cohesive experience. It features real-time system monitoring, recursive visual components, and custom-filtered SVG aesthetics to create a unique, high-fidelity atmosphere.
+This portfolio utilizes a **Bento Grid** architecture to organize my projects into a cohesive experience. It features real-time system monitoring, recursive visual components, and custom-filtered SVG aesthetics to create a unique, high-fidelity atmosphere.
 
 ## Screenshot
 

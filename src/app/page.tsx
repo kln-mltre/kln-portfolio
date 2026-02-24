@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { User, Mail, Terminal, Bot, Layout, Code2, Github, Gamepad2, Sparkles, ChevronLeft, ChevronRight, Download, Mic, Wand2, Video, Scissors, Calendar, Database, Clock, Upload, Zap, MousePointer } from 'lucide-react';
 import localFont from 'next/font/local';
+import { createPortal } from 'react-dom';
 
 // Pixel art display font (used for game-card titles)
 const pixelFont = localFont({ 
@@ -23,7 +24,7 @@ const handwrittenFont = localFont({
  *
  * Args:
  *   src: Path to the primary sprite image (.png).
- *   pos: Absolute positioning config — top, left offsets and base scale factor.
+ *   pos: Absolute positioning config top, left offsets and base scale factor.
  *
  * Returns:
  *   A positioned, non-interactive sticker element with a continuous wiggle animation.
@@ -122,6 +123,7 @@ const InceptionCase = () => {
     if (params.get('screenshot') === '1') return;
 
     const capture = () => {
+      if (window.innerWidth < 1024 || window.innerHeight < 750) return; // To save ressources on mobile, where the dive effect is disabled
       const w = window.innerWidth;
       const h = window.innerHeight;
       setScreenshotUrl(`/api/screenshot?w=${w}&h=${h}`);
@@ -142,12 +144,21 @@ const InceptionCase = () => {
     };
   }, []);
 
-  const isScreenshotMode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('screenshot') === '1';
+  // Defaults to false (normal render) to prevent a server/client hydration mismatch.
+  const [isScreenshotMode, setIsScreenshotMode] = useState(false);
 
-  // In screenshot render mode, display a static placeholder to prevent infinite recursion
+  // URL params are only accessible after mount; reading them in a useEffect avoids SSR mismatches.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('screenshot') === '1') {
+      setIsScreenshotMode(true);
+    }
+  }, []);
+
+  // Render a static placeholder during screenshot capture to break the Droste recursion.
   if (isScreenshotMode) {
     return (
-      <div className="relative min-h-[150px] lg:min-h-0 w-full h-full">
+      <div className="relative min-h-[150px] desk:min-h-0 w-full h-full">
         <div 
           className="absolute inset-0 border-0 border-[#2c3e50] bg-[#fdf6e3] rounded-3xl overflow-hidden shadow-lg"
           style={{
@@ -192,7 +203,7 @@ const InceptionCase = () => {
     // Scale factor so the background image covers the full viewport when expanded
     const zoomFactor = Math.max(window.innerWidth / rect.width, window.innerHeight / rect.height) * 1.5;
 
-    // Phase 1 — Detach: fix the card in place at its current screen position
+    // Phase 1 Detach: fix the card in place at its current screen position
     setDiveBoxStyle({
       position: 'fixed',
       top: rect.top + 'px',
@@ -219,7 +230,7 @@ const InceptionCase = () => {
       pointerEvents: 'none',
     });
 
-    // Phase 2 — Morph: double-rAF ensures the browser has painted the initial state first
+    // Phase 2 Morph: double-rAF ensures the browser has painted the initial state first
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         // Expand the card to fill the entire viewport
@@ -251,7 +262,7 @@ const InceptionCase = () => {
       });
     });
 
-    // Phase 3 — Reset: restore original state just before the CSS transition ends
+    // Phase 3 Reset: restore original state just before the CSS transition ends
     setTimeout(() => {
       setIsDiving(false);
       setDiveBoxStyle({});
@@ -260,30 +271,42 @@ const InceptionCase = () => {
   };
 
   return (
-    <div className="relative min-h-[150px] lg:min-h-0 w-full h-full">
+    <div className="relative min-h-[150px] desk:min-h-0 w-full h-full">
       
-      {/* Full-screen background layer used during the dive-in zoom animation */}
-      {isDiving && screenshotUrl && (
-        <div style={bgStyle}>
-          <img 
-            src={screenshotUrl} 
-            alt="background dive" 
-            className="w-full h-full object-cover object-top" 
-          />
-        </div>
+      {/* Portal: renders the dive animation outside the scaled container so it fills the true viewport. */}
+      {isDiving && screenshotUrl && typeof document !== 'undefined' && createPortal(
+        <>
+          {/* Full-viewport background layer that zooms outward from the vanishing point */}
+          <div style={bgStyle}>
+            <img src={screenshotUrl} alt="background dive" className="w-full h-full object-cover object-top" />
+          </div>
+
+          {/* Card clone that morphs to fill the entire screen during the dive transition */}
+          <div className="fixed overflow-hidden shadow-2xl" style={{
+            ...diveBoxStyle,
+            backgroundImage: `
+              linear-gradient(rgba(44, 62, 80, 0.06) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(44, 62, 80, 0.06) 1px, transparent 1px),
+              linear-gradient(rgba(44, 62, 80, 0.025) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(44, 62, 80, 0.025) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px, 50px 50px, 10px 10px, 10px 10px',
+            backgroundPosition: '-1px -1px, -1px -1px, -1px -1px, -1px -1px'
+          }}>
+            <img src={screenshotUrl} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
+          </div>
+        </>,
+        document.body
       )}
 
-      {/* Main interactive card — displays the live screenshot and handles click-to-dive */}
+      {/* Original card in the grid hidden during the dive so the portal clone occupies its visual space */}
       <div
         ref={boxRef}
         onClick={triggerDive}
-        className={`absolute inset-0 cursor-pointer group overflow-hidden transition-all duration-500 ${
-          isDiving ? '' : 'rounded-3xl hover:-translate-y-1'
-        } ${
+        className={`absolute inset-0 cursor-pointer group overflow-hidden transition-all duration-500 rounded-3xl ${
           screenshotUrl ? 'border-2 border-[#2c3e50] shadow-lg opacity-100' : 'opacity-0'
-        }`}
+        } ${isDiving ? 'opacity-0' : 'hover:-translate-y-1'}`}
         style={{
-          ...diveBoxStyle,
           backgroundImage: `
             linear-gradient(rgba(44, 62, 80, 0.06) 1px, transparent 1px),
             linear-gradient(90deg, rgba(44, 62, 80, 0.06) 1px, transparent 1px),
@@ -294,25 +317,20 @@ const InceptionCase = () => {
           backgroundPosition: '-1px -1px, -1px -1px, -1px -1px, -1px -1px'
         }}
       >
-        {/* Screenshot display or loading placeholder */}
         {screenshotUrl ? (
-          <img
-            src={screenshotUrl}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-            draggable={false}
-          />
+          <img src={screenshotUrl} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" draggable={false} />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center opacity-30">
-              <Terminal className="text-white mb-2" size={24} />
-              <span className="text-white text-[8px] font-mono tracking-widest">CAPTURING...</span>
-            </div>
+             <div className="flex flex-col items-center opacity-30">
+               <Terminal className="text-[#2c3e50] mb-2" size={24} />
+               <span className="text-[#2c3e50] text-[8px] font-mono tracking-widest font-bold">CAPTURING...</span>
+             </div>
           </div>
         )}
 
+        {/* Hover overlay: dive prompt label, suppressed while the animation is running */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ opacity: isDiving ? 0 : 1 }}>
-          <span className="opacity-0 group-hover:opacity-100 bg-white/10 backdrop-blur-md text-white font-mono text-[10px] px-4 py-2 rounded-full border border-white/20 shadow-lg font-bold tracking-widest transition-opacity duration-300">
+          <span className="opacity-0 group-hover:opacity-100 bg-white/10 backdrop-blur-md text-[#ffffff] font-mono text-[11px] px-4 py-2 rounded-full border border-[#2c3e50]/20 shadow-lg font-bold tracking-widest transition-opacity duration-300">
             [ CLICK TO DIVE ]
           </span>
         </div>
@@ -369,13 +387,61 @@ export default function Home() {
       url: 'https://github.com/kln-mltre/margaux-love-letter' 
     },
   ];
-  
+
+  // --- GitHub carousel state and navigation ---
   const [currentProject, setCurrentProject] = useState(0);
 
   /** Advances the GitHub carousel to the next project (wraps around). */
   const nextProject = () => setCurrentProject((prev) => (prev + 1) % projects.length);
   /** Moves the GitHub carousel to the previous project (wraps around). */
   const prevProject = () => setCurrentProject((prev) => (prev - 1 + projects.length) % projects.length);
+
+  // --- Layout / viewport scaling ---
+  const [pageScale, setPageScale] = useState(1);
+  const [isDesk, setIsDesk] = useState(false);
+  const [isRestricted, setIsRestricted] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Below 570 px height the grid is too compressed to be usable; show the restricted overlay.
+      if (window.innerHeight < 570) {
+        setIsRestricted(true);
+      } else {
+        setIsRestricted(false);
+      }
+
+      // Desktop layout: scale the fixed 1100×860 canvas to fill the available viewport.
+      if (window.innerWidth >= 1024 && window.innerHeight >= 750) {
+        setIsDesk(true);
+        
+        // Fixed logical canvas dimensions the design was authored at this size.
+        const CANVAS_WIDTH = 1100;
+        const CANVAS_HEIGHT = 860; 
+
+        const availableWidth = window.innerWidth - 0;
+        // Reserve 103 px for the browser chrome so the canvas never overflows vertically.
+        const availableHeight = window.innerHeight - 103;
+
+        const scaleX = availableWidth / CANVAS_WIDTH;
+        const scaleY = availableHeight / CANVAS_HEIGHT;
+
+        // Taking the smaller ratio guarantees the canvas fits both dimensions simultaneously;
+        // scale may exceed 1 on large monitors and drop below 1 on compact screens.
+        let finalScale = Math.min(scaleX, scaleY);
+
+        //finalScale = Math.min(finalScale, 2.0);
+
+        setPageScale(finalScale);
+      } else {
+        setIsDesk(false);
+        setPageScale(1);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // --- Terminal card state (uptime counter, system data) ---
   const [uptime, setUptime] = useState(0);
@@ -517,7 +583,7 @@ export default function Home() {
     return () => clearInterval(id);
   }, [qrHovered]);
 
-  // Progressive scale values per frame — final size deliberately overshoots then settles for punch
+  // Progressive scale values per frame final size deliberately overshoots then settles for punch
   const qrScales = [1, 1.8, 2.8, 4.2, 4];
   
   // Wobble runs only during the transition frames; stabilizes once fully zoomed in (frame 4)
@@ -547,7 +613,7 @@ export default function Home() {
   return (
     // Full-viewport layout: fixed height on desktop, dynamic viewport height on mobile
     <main 
-      className="h-[100dvh] w-full overflow-hidden bg-[#fdf6e3] text-[#2c3e50] flex flex-col items-center justify-center font-sans"
+      className="relative h-[100dvh] w-full overflow-hidden bg-[#fdf6e3] text-[#2c3e50] flex flex-col items-center justify-center font-sans"
       style={{
         backgroundImage: `
           linear-gradient(rgba(44, 62, 80, 0.06) 1px, transparent 1px),
@@ -560,21 +626,58 @@ export default function Home() {
         backgroundPosition: '-1px -1px, -1px -1px, -1px -1px, -1px -1px'
       }}
     >
-      
-      <div className="w-full max-w-[1100px] h-full flex flex-col p-4 lg:p-8">
+
+      {/* Restricted viewport overlay blocks interaction when the window is too small to render the layout */}
+      <div 
+        className={`fixed inset-0 z-[99999] bg-[#fdf6e3] flex-col items-center justify-center text-[#2c3e50] p-8 text-center ${isRestricted ? 'flex' : 'hidden'}`}
+      >
         
-        <header className="flex-none mb-6 mt-2 lg:mt-0">
+        {/* Animated pause bars */}
+        <div className="flex gap-2 mb-6">
+          <div className="w-3 h-10 bg-[#2c3e50] rounded-sm animate-[pulse_1.5s_ease-in-out_infinite]" />
+          <div className="w-3 h-10 bg-[#2c3e50] rounded-sm animate-[pulse_1.5s_ease-in-out_infinite_0.5s]" />
+        </div>
+
+        <h2 className="text-xl desk:text-2xl font-black font-mono tracking-widest uppercase mb-4">
+          Wait a minute...
+        </h2>
+        
+        <p className="text-sm desk:text-base font-medium opacity-80 max-w-[450px] leading-relaxed">
+          Please **rotate your device** or **stop squishing this site** with your browser window :)
+        </p>
+
+        {/* Flavor text for unsupported viewport sizes */}
+        <p className="mt-8 text-[10px] font-mono opacity-80 uppercase tracking-tighter">
+          [ ERR: Viewport too small. This site is not available for iPhone 4 users <br/> or anyone living in 480px of height. Modern problems require modern displays. ]
+        </p>
+
+      </div>
+      
+      <div 
+        className={`flex flex-col p-4 desk:p-8 ${isDesk ? 'absolute' : 'w-full h-full'}`}
+        style={isDesk ? {
+          width: '1100px',
+          height: '860px',
+          // Top is fixed so the header always aligns with the viewport edge regardless of scale.
+          top: '0px',
+          left: '50%',
+          // Horizontal centering only; Y translation is intentionally omitted to keep the top edge pinned.
+          transform: `translateX(-50%) scale(${pageScale})`,
+          // Scale origin anchored to the top so the header never moves on resize.
+          transformOrigin: 'top center',
+        } : {}}
+      >
+        <header className="flex-none mb-6 mt-2 desk:mt-0">
           <h1 className="text-3xl font-black uppercase tracking-tight leading-none">Kylian Malartre</h1>
-          <p className="text-lg font-medium opacity-70 mt-1">Computer Science Student at UBx</p>
+          <p className="text-lg font-medium opacity-70 mt-1">Computer Science Student at the University of Bordeaux</p>
         </header>
 
         {/* Bento grid: horizontal scroll (2-row) on mobile, 4-column dense layout on desktop */}
         <div 
-          className="flex-1 grid content-center lg:content-stretch grid-rows-[200px_200px] grid-flow-col lg:grid-rows-4 lg:grid-flow-dense lg:grid-cols-4 gap-4 mt-2 lg:mt-0 pb-4 lg:pb-0 overflow-x-auto lg:overflow-visible overflow-y-hidden snap-x auto-cols-[230px] lg:auto-cols-auto -mx-4 px-4 lg:mx-0 lg:px-0"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          className="flex-1 grid content-center desk:content-stretch grid-rows-[200px_200px] grid-flow-col desk:grid-rows-4 desk:grid-flow-dense desk:grid-cols-4 gap-4 mt-2 desk:mt-0 pb-6 desk:pb-0 overflow-x-auto desk:overflow-visible overflow-y-hidden snap-x auto-cols-[230px] desk:auto-cols-auto -mx-4 px-4 desk:mx-0 desk:px-0"
         >
-          {/* --- [A] Identity badge card — Polaroid-style with animated photo and barcode --- */}
-          <div className="relative rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-[#5b0a0a] to-[#3d0707] min-h-[420px] lg:min-h-0 row-span-2 order-1 lg:order-none flex flex-col overflow-hidden shadow-lg">
+          {/* --- [A] Identity badge card Polaroid-style with animated photo and barcode --- */}
+          <div className="relative rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-[#5b0a0a] to-[#3d0707] min-h-[420px] desk:min-h-0 row-span-2 order-1 desk:order-none flex flex-col overflow-hidden shadow-lg">
             
             {/* Punch hole decoration */}
             <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-5 bg-[#fdf6e3] rounded-full border-2 border-[#2c3e50] z-20 shadow-inner" />
@@ -583,7 +686,7 @@ export default function Home() {
             <div className="flex-1 flex flex-col px-6 pt-14 pb-2 relative z-30 pointer-events-none">
               
               <div className="relative">
-                <h2 className="text-3xl lg:text-4xl font-black uppercase text-white leading-none tracking-tight">Kylian</h2>
+                <h2 className="text-3xl desk:text-4xl font-black uppercase text-white leading-none tracking-tight">Kylian</h2>
                 <p className="text-base font-semibold text-[#f2e8d5] mt-1 italic opacity-90">Full-stack Explorer</p>
               </div>
 
@@ -602,14 +705,14 @@ export default function Home() {
               </ul>
                 
               {/* Decorative chip module (smart card aesthetic) */}
-              <div className="absolute top-13.5 right-4 lg:top-14.5 lg:right-6 w-10 h-8 rounded-md bg-gradient-to-br from-[#c5a36e] to-[#a88a54] border border-black/20 p-1 flex items-center justify-center shadow-inner opacity-90 z-40">
+              <div className="absolute top-13.5 right-4 desk:top-14.5 desk:right-6 w-10 h-8 rounded-md bg-gradient-to-br from-[#c5a36e] to-[#a88a54] border border-black/20 p-1 flex items-center justify-center shadow-inner opacity-90 z-40">
                 <div className="w-full h-full border border-black/10 rounded-sm grid grid-cols-2 grid-rows-3 gap-0.5 opacity-50">
                   {[...Array(6)].map((_, i) => <div key={i} className="border-[0.5px] border-black/20" />)}
                 </div>
               </div>
 
               {/* Handwritten signature overlay */}
-              <div className="absolute bottom-[10px] left-[-7px] lg:bottom-[10px] lg:left-[-3px] h-28 w-28 brightness-125">
+              <div className="absolute bottom-[10px] left-[-7px] desk:bottom-[10px] desk:left-[-3px] h-28 w-28 brightness-125">
                 <img 
                   src="/signature.png" 
                   alt="Signature" 
@@ -619,7 +722,7 @@ export default function Home() {
             </div>
 
             {/* Polaroid photo with hover lift and shine effect */}
-            <div tabIndex={0} className="absolute bottom-4 right-3 lg:right-4 z-10 group cursor-pointer focus:outline-none">
+            <div tabIndex={0} className="absolute bottom-4 right-3 desk:right-4 z-10 group cursor-pointer focus:outline-none">
               <div className="bg-[#fdf6e3] p-1.5 pb-6 shadow-2xl rotate-3 transform transition-all group-hover:rotate-1 group-focus:rotate-1 group-hover:-translate-y-4 group-focus:-translate-y-4 duration-500 overflow-hidden relative">
                 
                 <div className="w-24 h-auto border-2 border-[#2c3e50]/10 overflow-hidden relative z-10">
@@ -631,7 +734,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Card footer — barcode and serial ID */}
+            {/* Card footer barcode and serial ID */}
             <div className="bg-gradient-to-r from-[#f2e8d5] to-[#eaddcf] rounded-b-3xl px-6 py-2.5 border-t-2 border-[#2c3e50] relative z-20 shadow-[0_-4px_10px_rgba(0,0,0,0.2)] flex items-center justify-between">
               
               {/* Barcode graphic */}
@@ -649,13 +752,13 @@ export default function Home() {
 
           </div>
 
-          {/* --- [B] Contact card — 3D mailbox with flag and interactive letter --- */}
-          <div tabIndex={0} className="group relative rounded-4xl border-2 border-[#2c3e50] bg-gradient-to-br from-[#681212] to-[#450505] min-h-[150px] lg:min-h-0 overflow-visible shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] cursor-pointer z-10 hover:z-50 focus:z-50 perspective-[1000px] order-2 lg:order-none focus:outline-none">
+          {/* --- [B] Contact card 3D mailbox with flag and interactive letter --- */}
+          <div tabIndex={0} className="group relative rounded-4xl border-2 border-[#2c3e50] bg-gradient-to-br from-[#681212] to-[#450505] min-h-[150px] desk:min-h-0 overflow-visible shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] cursor-pointer z-10 hover:z-50 focus:z-50 perspective-[1000px] order-2 desk:order-none focus:outline-none">
             
             {/* Inner door groove decoration */}
             <div className="absolute inset-2 border border-black/30 rounded-3xl shadow-[0_1px_0_rgba(255,255,255,0.1)] pointer-events-none z-0"></div>
 
-            {/* 3D mailbox flag — pivots backward on hover via rotateX with strong perspective */}
+            {/* 3D mailbox flag pivots backward on hover via rotateX with strong perspective */}
             <div className="absolute bottom-[75%] -right-[10px] w-4 h-34 z-0 flex flex-col items-center pointer-events-none" style={{ perspective: '400px' }}>
                
                {/* Metal pivot base */}
@@ -664,7 +767,7 @@ export default function Home() {
                  <div className="w-1 h-1 bg-black/80 rounded-full shadow-inner"></div>
                </div>
                
-               {/* Flag arm — rotates from bottom hinge, slight Y-axis tilt reveals depth */}
+               {/* Flag arm rotates from bottom hinge, slight Y-axis tilt reveals depth */}
                <div 
                  className="absolute bottom-2 w-2 h-16 bg-[#bb0707] origin-bottom transition-all duration-700 ease-in-out z-10 rounded-t-sm border border-[#a11d27] group-hover:[transform:rotateX(75deg)_rotateY(-15deg)] group-focus:[transform:rotateX(75deg)_rotateY(-15deg)]"
                  style={{ transformStyle: 'preserve-3d' }}
@@ -684,6 +787,7 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Lock */}
             <div className="absolute bottom-14 inset-x-5 flex items-center justify-between z-0 px-2">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 via-gray-400 to-gray-600 border border-gray-500 shadow-[0_2px_5px_rgba(0,0,0,0.6),inset_0_1px_2px_rgba(255,255,255,0.9)] flex items-center justify-center relative">
                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-gray-600 to-gray-300 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)] flex items-center justify-center">
@@ -691,6 +795,7 @@ export default function Home() {
                  </div>
               </div>
 
+              {/* Address label plate */}
               <div className="w-[50%] max-w-[110px] h-9 bg-gradient-to-b from-gray-300 to-gray-500 rounded-sm shadow-[0_2px_4px_rgba(0,0,0,0.5)] p-[2px] flex items-center justify-center">
                 <div className="w-full h-full bg-[#ebd5b3] shadow-[inset_0_1px_3px_rgba(0,0,0,0.3)] flex items-center justify-center relative overflow-hidden">
                    <span className="text-[10px] font-sans font-semibold text-gray-800 tracking-tight">Mr. Malartre</span>
@@ -704,31 +809,30 @@ export default function Home() {
               
               {/* Visible paper edge (peek) */}
               <div 
-                className="bg-white rounded-t-sm shadow-[0_-2px_10px_rgba(0,0,0,0.3)] h-3 relative z-10 border-b border-gray-200 w-[45%] transition-all duration-500 group-hover:w-[85%] group-focus:w-[85%]"
+                className="bg-white rounded-t-sm shadow-[0_-2px_10px_rgba(0,0,0,0.3)] h-3 relative z-10 border-b border-gray-200 w-[55%] transition-all duration-500 group-hover:w-[85%] group-focus:w-[89%]"
                 style={{ backgroundImage: 'repeating-linear-gradient(transparent, transparent 9px, #e5e7eb 9px, #e5e7eb 10px)' }}
               ></div>
               
               {/* Unfolding letter body */}
               <div 
-                className="bg-white shadow-xl origin-top transition-all duration-500 ease-out overflow-hidden rounded-b-sm max-h-0 scale-y-0 w-[45%] group-hover:max-h-[110px] group-focus:max-h-[110px] group-hover:scale-y-100 group-focus:scale-y-100 group-hover:w-[85%] group-focus:w-[85%] group-focus:w-[85%] relative pointer-events-auto"
+                className="bg-white shadow-xl origin-top transition-all duration-500 ease-out overflow-hidden rounded-b-sm max-h-2 scale-y-0 w-[45%] group-hover:max-h-[160px] group-focus:max-h-[200px] group-hover:scale-y-100 group-focus:scale-y-100 group-hover:w-[85%] group-focus:w-[89%] relative pointer-events-auto"
                 style={{ backgroundImage: 'repeating-linear-gradient(transparent, transparent 9px, #e5e7eb 10.7px, #e5e7eb 10px)' }}
               >
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-400 opacity-50"></div>
-                
-                <div className="px-4 py-5 flex flex-col items-center justify-center relative z-10">
-                  <Mail className="mb-1 text-red-500" size={24} />
-                  <p className="text-sm font-bold text-gray-800 leading-tight">Contact</p>
-                  <p className="text-[11px] font-semibold text-gray-600 mt-0.5">kylian.malartre@gmail.com</p>
+                <div className="pt-2 pb-4 flex flex-col items-center justify-center relative z-10">
+                  <Mail className="mb-2 text-red-500" size={26} />
+                  <p className="text-[17px] mt-[-4px] font-bold text-gray-800 leading-tight">Contact</p>
+                  <p className="text-[14px] font-semibold text-gray-600 mt-1">kylian.malartre@gmail.com</p>
                 </div>
               </div>
             </div>
 
           </div>
 
-          {/* --- [C] KlipScheduler card — TikTok automation pipeline visualization --- */}
-          <div tabIndex={0} className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pl-3 pr-4 pt-2.5 pb-4 min-h-[200px] lg:min-h-0 col-span-2 order-4 lg:order-none flex flex-col overflow-hidden shadow-lg relative cursor-pointer focus:outline-none">
+          {/* --- [C] KlipScheduler card TikTok automation pipeline visualization --- */}
+          <div tabIndex={0} className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pl-3 pr-4 pt-2.5 pb-4 min-h-[200px] desk:min-h-0 col-span-2 order-4 desk:order-none flex flex-col overflow-hidden shadow-lg relative cursor-pointer focus:outline-none">
             {/* Header */}
-            <div className="flex items-center gap-2 mb-1 pt-3 pl-2 pr-2 flex-none">
+            <div className="flex items-center gap-2 mb-0 pt-3 pl-2 pr-2 flex-none">
               <Terminal className="text-amber-400 flex-shrink-0" size={22} />
               <h3 className="font-bold text-lg text-white leading-tight">KlipScheduler</h3>
               <span className="ml-auto text-[10px] text-slate-300 font-mono leading-tight text-right">Automatically schedules and publishes<br/>clips on TikTok</span>
@@ -738,15 +842,12 @@ export default function Home() {
             <div className="flex-1 flex items-center justify-between relative pt-[-15px]">
               {/* Step 1 - Calendar */}
               <div className="flex flex-col items-center flex-shrink-0">
-                <div className="w-full max-w-[95px] rounded-lg border-2 border-amber-500/40 bg-amber-950/50 flex flex-col items-center p-2 relative overflow-hidden group-hover:border-amber-400/70 group-focus:border-amber-400/70 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] group-focus:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-500">
+                <div className="w-full max-w-[110px] rounded-lg border-2 border-amber-500/40 bg-amber-950/50 flex flex-col items-center p-3 relative overflow-hidden group-hover:border-amber-400/70 group-focus:border-amber-400/70 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] group-focus:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-500">
                   <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(245,158,11,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.3) 1px, transparent 1px)', backgroundSize: '8px 8px' }} />
-                  <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center">
-                    <span className="text-[8px] font-bold text-amber-300">1</span>
-                  </div>
-                  <Calendar className="text-amber-400 mb-1 relative z-10" size={16} />
-                  <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider relative z-10">Calendar</span>
-                  <span className="text-[8px] text-amber-500/90 font-mono relative z-10">Date & Desc</span>
-                  <span className="text-[8px] text-amber-600/80 font-mono relative z-10">Schedule</span>
+                  <Calendar className="text-amber-400 mb-1.5 relative z-10" size={20} />
+                  <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider relative z-10">Calendar</span>
+                  <span className="text-[9px] text-amber-500/90 font-mono relative z-10">Date & Desc</span>
+                  <span className="text-[9px] text-amber-600/80 font-mono relative z-10">Schedule</span>
                 </div>
               </div>
 
@@ -766,14 +867,11 @@ export default function Home() {
 
               {/* Step 2 - SQLite DB */}
               <div className="flex flex-col items-center flex-shrink-0">
-                <div className="w-full max-w-[95px] rounded-lg border-2 border-sky-500/40 bg-sky-950/50 flex flex-col items-center p-2 relative overflow-hidden group-hover:border-sky-400/70 group-focus:border-sky-400/70 group-hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] group-focus:shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all duration-500">
+                <div className="w-full max-w-[110px] rounded-lg border-2 border-sky-500/40 bg-sky-950/50 flex flex-col items-center p-3 relative overflow-hidden group-hover:border-sky-400/70 group-focus:border-sky-400/70 group-hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] group-focus:shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all duration-500">
                   <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(14,165,233,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(14,165,233,0.3) 1px, transparent 1px)', backgroundSize: '8px 8px' }} />
-                  <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center">
-                    <span className="text-[8px] font-bold text-sky-300">2</span>
-                  </div>
-                  <Database className="text-sky-400 mb-1 relative z-10" size={16} />
-                  <span className="text-[10px] font-bold text-sky-300 uppercase tracking-wider relative z-10">SQLite</span>
-                  <span className="text-[8px] text-sky-500/90 font-mono relative z-10">Video DB</span>
+                  <Database className="text-sky-400 mb-1.5 relative z-10" size={20} />
+                  <span className="text-[11px] font-bold text-sky-300 uppercase tracking-wider relative z-10">SQLite</span>
+                  <span className="text-[9px] text-sky-500/90 font-mono relative z-10">Video DB</span>
                 </div>
               </div>
 
@@ -793,14 +891,11 @@ export default function Home() {
 
               {/* Step 3 - Worker */}
               <div className="flex flex-col items-center flex-shrink-0 relative">
-                <div className="w-full max-w-[95px] rounded-lg border-2 border-rose-500/40 bg-rose-950/50 flex flex-col items-center p-2 relative overflow-hidden group-hover:border-rose-400/70 group-focus:border-rose-400/70 group-hover:shadow-[0_0_20px_rgba(244,63,94,0.3)] group-focus:shadow-[0_0_20px_rgba(244,63,94,0.3)] transition-all duration-500">
+                <div className="w-full max-w-[110px] rounded-lg border-2 border-rose-500/40 bg-rose-950/50 flex flex-col items-center p-3 relative overflow-hidden group-hover:border-rose-400/70 group-focus:border-rose-400/70 group-hover:shadow-[0_0_20px_rgba(244,63,94,0.3)] group-focus:shadow-[0_0_20px_rgba(244,63,94,0.3)] transition-all duration-500">
                   <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(244,63,94,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(244,63,94,0.3) 1px, transparent 1px)', backgroundSize: '8px 8px' }} />
-                  <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-500/20 border border-rose-400/40 flex items-center justify-center">
-                    <span className="text-[8px] font-bold text-rose-300">3</span>
-                  </div>
-                  <Clock className="text-rose-400 mb-1 relative z-10" size={16} />
-                  <span className="text-[10px] font-bold text-rose-300 uppercase tracking-wider relative z-10">Worker</span>
-                  <span className="text-[8px] text-rose-600/80 font-mono relative z-10">24/7</span>
+                  <Clock className="text-rose-400 mb-1.5 relative z-10" size={20} />
+                  <span className="text-[11px] font-bold text-rose-300 uppercase tracking-wider relative z-10">Worker</span>
+                  <span className="text-[9px] text-rose-600/80 font-mono relative z-10">24/7</span>
                 </div>
               </div>
 
@@ -820,28 +915,25 @@ export default function Home() {
 
               {/* Step 4 - TikTok Driver */}
               <div className="flex flex-col items-center flex-shrink-0">
-                <div className="w-full max-w-[95px] rounded-lg border-2 border-fuchsia-500/40 bg-fuchsia-950/50 flex flex-col items-center p-2 relative overflow-hidden group-hover:border-fuchsia-400/70 group-focus:border-fuchsia-400/70 group-hover:shadow-[0_0_20px_rgba(217,70,239,0.3)] group-focus:shadow-[0_0_20px_rgba(217,70,239,0.3)] transition-all duration-500">
+                <div className="w-full max-w-[110px] rounded-lg border-2 border-fuchsia-500/40 bg-fuchsia-950/50 flex flex-col items-center p-3 relative overflow-hidden group-hover:border-fuchsia-400/70 group-focus:border-fuchsia-400/70 group-hover:shadow-[0_0_20px_rgba(217,70,239,0.3)] group-focus:shadow-[0_0_20px_rgba(217,70,239,0.3)] transition-all duration-500">
                   <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(217,70,239,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(217,70,239,0.3) 1px, transparent 1px)', backgroundSize: '8px 8px' }} />
-                  <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-fuchsia-500/20 border border-fuchsia-400/40 flex items-center justify-center">
-                    <span className="text-[8px] font-bold text-fuchsia-300">4</span>
-                  </div>
-                  <Upload className="text-fuchsia-400 mb-1 relative z-10" size={16} />
-                  <span className="text-[10px] font-bold text-fuchsia-300 uppercase tracking-wider relative z-10">Driver</span>
-                  <span className="text-[8px] text-fuchsia-500/90 font-mono relative z-10">bioMouse</span>
-                  <span className="text-[8px] text-fuchsia-600/80 font-mono relative z-10">Playwright</span>
+                  <Upload className="text-fuchsia-400 mb-1 relative z-10" size={20} />
+                  <span className="text-[11px] font-bold text-fuchsia-300 uppercase tracking-wider relative z-10">Driver</span>
+                  <span className="text-[9px] text-fuchsia-500/90 font-mono relative z-10">bioMouse</span>
+                  <span className="text-[9px] text-fuchsia-600/80 font-mono relative z-10">Playwright</span>
                 </div>
               </div>
 
               {/* Dashed SIGUSR1 signal line from Calendar to Worker (runs below the cards) */}
-              <svg className="absolute pointer-events-none overflow-visible" style={{ bottom: '0px', left: '19%', width: '41%', height: '30px' }} viewBox="0 0 200 30" fill="none" preserveAspectRatio="none">
+              <svg className="absolute pointer-events-none overflow-visible" style={{ bottom: '-11px', left: '19%', width: '40%', height: '33px' }} viewBox="0 0 200 30" fill="none" preserveAspectRatio="none">
                 <path d="M 0,6 Q 155,24 200,2" stroke="rgba(245,158,11,0.4)" strokeWidth="1.5" strokeDasharray="5 4" fill="none" />
-                <text x="120" y="28" textAnchor="middle" fontSize="7" fontFamily="monospace" fill="rgba(245,158,11,0.7)" letterSpacing="1">SIGUSR1</text>
+                <text x="120" y="28" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="rgba(245,158,11,0.7)" letterSpacing="1">SIGUSR1</text>
               </svg>
             </div>
           </div>
 
-          {/* --- [E] KlipMachine card — AI clip generation pipeline visualization --- */}
-          <div tabIndex={0} className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-5 min-h-[200px] lg:min-h-0 col-span-2 order-7 lg:order-none flex flex-col overflow-hidden shadow-lg relative cursor-pointer focus:outline-none">
+          {/* --- [E] KlipMachine card AI clip generation pipeline visualization --- */}
+          <div tabIndex={0} className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-5 min-h-[200px] desk:min-h-0 col-span-2 order-7 desk:order-none flex flex-col overflow-hidden shadow-lg relative cursor-pointer focus:outline-none">
             {/* Header */}
             <div className="flex items-center gap-2 mb-1 flex-none">
               <Scissors className="text-cyan-400" size={22} />
@@ -856,11 +948,6 @@ export default function Home() {
                 <div className="w-full max-w-[100px] rounded-xl border-2 border-cyan-500/40 bg-cyan-950/50 flex flex-col items-center p-3 relative overflow-hidden group-hover:border-cyan-400/70 group-focus:border-cyan-400/70 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] group-focus:shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-500">
                   {/* Subtle grid pattern */}
                   <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(6,182,212,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.3) 1px, transparent 1px)', backgroundSize: '8px 8px' }} />
-                  
-                  {/* Step number badge */}
-                  <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center">
-                    <span className="text-[9px] font-bold text-cyan-300">1</span>
-                  </div>
                   
                   {/* Icon */}
                   <Download className="text-cyan-400 mb-1.5 relative z-10" size={20} />
@@ -890,11 +977,6 @@ export default function Home() {
                 <div className="w-full max-w-[130px] rounded-xl border-2 border-violet-500/40 bg-violet-950/50 flex flex-col items-center p-3 relative overflow-hidden group-hover:border-violet-400/70 group-focus:border-violet-400/70 group-hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] group-focus:shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all duration-500">
                   <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(139,92,246,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.3) 1px, transparent 1px)', backgroundSize: '8px 8px' }} />
                   
-                  {/* Step number badge */}
-                  <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-violet-500/20 border border-violet-400/40 flex items-center justify-center">
-                    <span className="text-[9px] font-bold text-violet-300">2</span>
-                  </div>
-                  
                   {/* Icon */}
                   <Wand2 className="text-violet-400 mb-1.5 relative z-10" size={20} />
                   
@@ -923,11 +1005,6 @@ export default function Home() {
                 <div className="w-full max-w-[130px] rounded-xl border-2 border-emerald-500/40 bg-emerald-950/50 flex flex-col items-center p-3 relative overflow-hidden group-hover:border-emerald-400/70 group-focus:border-emerald-400/70 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] group-focus:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-500">
                   <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(16,185,129,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.3) 1px, transparent 1px)', backgroundSize: '8px 8px' }} />
                   
-                  {/* Step number badge */}
-                  <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center">
-                    <span className="text-[9px] font-bold text-emerald-300">3</span>
-                  </div>
-                  
                   {/* Icon */}
                   <Video className="text-emerald-400 mb-1.5 relative z-10" size={20} />
                   
@@ -946,10 +1023,10 @@ export default function Home() {
             </div>
           </div>
 
-          {/* --- [D] Net puzzle game — interactive pixel-art grid showcase --- */}
-          <div className="relative rounded-3xl border-2 border-[#2c3e50] min-h-[200px] lg:min-h-0 row-span-2 lg:row-span-3 order-6 lg:order-none overflow-hidden shadow-sm group">
+          {/* --- [D] Net puzzle game interactive pixel-art grid showcase --- */}
+          <div className="relative rounded-3xl border-2 border-[#2c3e50] min-h-[200px] desk:min-h-0 row-span-2 desk:row-span-3 order-6 desk:order-none overflow-hidden shadow-sm group">
             
-            {/* Pixel-art background — rendering set to nearest-neighbor */}
+            {/* Pixel-art background rendering set to nearest-neighbor */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/BACKGROUND.png"
@@ -959,112 +1036,130 @@ export default function Home() {
             />
 
             {/* Game title (uses the custom pixel font) */}
-            <div className={`absolute top-2 lg:top-8 inset-x-0 z-10 flex flex-col items-center justify-center leading-none select-none pointer-events-none ${pixelFont.className}`}>
-              <h3 className="text-[34px] text-[#ffffff] uppercase">
+            <div className={`absolute top-3 desk:top-8 inset-x-0 z-10 flex flex-col items-center justify-center leading-none select-none pointer-events-none ${pixelFont.className}`}>
+              <h3 className="text-[34px] desk:text-[38px] text-[#ffffff] uppercase">
                 Net Puzzle
               </h3>
             </div>
 
-            {/* Puzzle grid — each cell is aspect-square for consistent tile alignment */}
+            {/* Puzzle grid each cell is aspect-square for consistent tile alignment */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-full grid grid-cols-4 grid-rows-6 scale-110 translate-y-6 lg:scale-143 lg:translate-y-10" style={{ gap: 0 }}>
+              <div className="w-full grid grid-cols-4 grid-rows-6 scale-108 translate-y-6 desk:scale-143 desk:translate-y-10" style={{ gap: 0 }}>
                 
                 {/* Row 1 */}
                 <div className="relative aspect-square overflow-hidden"></div>
-                <div className="group/e90_3 relative aspect-square overflow-hidden">
-                  <img src="/Endpoint180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/e90_3:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
-                  <img src="/End180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/e90_3:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                
+                <div tabIndex={0} className="group/e90_3 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Endpoint180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/e90_3:opacity-0 group-focus/e90_3:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                  <img src="/End180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/e90_3:opacity-100 group-focus/e90_3:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
                 </div>
-                <div className="group/e90_1 relative aspect-square overflow-hidden">
-                  <img src="/Endpoint180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/e90_1:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
-                  <img src="/End180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/e90_1:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                
+                <div tabIndex={0} className="group/e90_1 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Endpoint180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/e90_1:opacity-0 group-focus/e90_1:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                  <img src="/End180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/e90_1:opacity-100 group-focus/e90_1:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
                 </div>
+                
                 <div className="relative aspect-square overflow-hidden"></div>
 
                 {/* Row 2 */}
                 <div className="relative aspect-square overflow-hidden"></div>
-                <div className="group/t1 relative aspect-square overflow-hidden">
-                  <img src="/Tee90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/t1:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
-                  <img src="/Tee180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/t1:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                
+                <div tabIndex={0} className="group/t1 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Tee90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/t1:opacity-0 group-focus/t1:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
+                  <img src="/Tee180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/t1:opacity-100 group-focus/t1:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
                 </div>
-                <div className="group/c1 relative aspect-square overflow-hidden">
-                  <img src="/Corner270.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/c1:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
-                  <img src="/Corner.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/c1:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
+                
+                <div tabIndex={0} className="group/c1 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Corner270.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/c1:opacity-0 group-focus/c1:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                  <img src="/Corner.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/c1:opacity-100 group-focus/c1:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
                 </div>
+                
                 <div className="relative aspect-square overflow-hidden"></div>
 
                 {/* Row 3 */}
-                <div className="group/s_bot1 relative aspect-square overflow-hidden">
-                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s_bot1:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
-                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s_bot1:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                <div tabIndex={0} className="group/s_bot1 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s_bot1:opacity-0 group-focus/s_bot1:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
+                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s_bot1:opacity-100 group-focus/s_bot1:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
                 </div>
-                <div className="group/t2 relative aspect-square overflow-hidden">
-                  <img src="/Tee270.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/t2:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
-                  <img src="/Tee.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/t2:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
+                
+                <div tabIndex={0} className="group/t2 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Tee270.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/t2:opacity-0 group-focus/t2:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                  <img src="/Tee.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/t2:opacity-100 group-focus/t2:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
                 </div>
-                <div className="group/c2 relative aspect-square overflow-hidden">
-                  <img src="/Corner90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/c2:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
-                  <img src="/Corner270.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/c2:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                
+                <div tabIndex={0} className="group/c2 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Corner90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/c2:opacity-0 group-focus/c2:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
+                  <img src="/Corner270.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/c2:opacity-100 group-focus/c2:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
                 </div>
-                <div className="group/s_top relative aspect-square overflow-hidden">
-                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s_top:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
-                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s_top:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                
+                <div tabIndex={0} className="group/s_top relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s_top:opacity-0 group-focus/s_top:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
+                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s_top:opacity-100 group-focus/s_top:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
                 </div>
 
                 {/* Row 4 */}
                 <div className="relative aspect-square overflow-hidden"></div>
-                <div className="group/s2 relative aspect-square overflow-hidden">
-                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s2:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
-                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s2:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
+                
+                <div tabIndex={0} className="group/s2 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s2:opacity-0 group-focus/s2:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s2:opacity-100 group-focus/s2:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
                 </div>
-                <div className="group/s1 relative aspect-square overflow-hidden">
-                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s1:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
-                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s1:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
+                
+                <div tabIndex={0} className="group/s1 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s1:opacity-0 group-focus/s1:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s1:opacity-100 group-focus/s1:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
                 </div>
+                
                 <div className="relative aspect-square overflow-hidden"></div>
 
                 {/* Row 5 */}
                 <div className="relative aspect-square overflow-hidden"></div>
-                <div className="group/s3 relative aspect-square overflow-hidden">
-                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s3:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
-                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s3:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
+                
+                <div tabIndex={0} className="group/s3 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s3:opacity-0 group-focus/s3:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s3:opacity-100 group-focus/s3:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
                 </div>
-                <div className="group/e90_2 relative aspect-square overflow-hidden">
-                  <img src="/Endpoint.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/e90_2:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
-                  <img src="/End.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/e90_2:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
+                
+                <div tabIndex={0} className="group/e90_2 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Endpoint.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/e90_2:opacity-0 group-focus/e90_2:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
+                  <img src="/End.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/e90_2:opacity-100 group-focus/e90_2:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
                 </div>
+                
                 <div className="relative aspect-square overflow-hidden"></div>
 
                 {/* Row 6 */}
-                <div className="group/s_bot2 relative aspect-square overflow-hidden">
-                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s_bot2:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
-                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s_bot2:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                <div tabIndex={0} className="group/s_bot2 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s_bot2:opacity-0 group-focus/s_bot2:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
+                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s_bot2:opacity-100 group-focus/s_bot2:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
                 </div>
-                <div className="group/c3 relative aspect-square overflow-hidden">
-                  <img src="/Corner270.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/c3:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
-                  <img src="/Corner.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/c3:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
+                
+                <div tabIndex={0} className="group/c3 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Corner270.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/c3:opacity-0 group-focus/c3:opacity-0 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                  <img src="/Corner.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/c3:opacity-100 group-focus/c3:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
                 </div>
-                <div className="group/ep1 relative aspect-square overflow-hidden">
-                  <img src="/Endpoint90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/ep1:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
-                  <img src="/End90.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/ep1:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
+                
+                <div tabIndex={0} className="group/ep1 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Endpoint90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/ep1:opacity-0 group-focus/ep1:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
+                  <img src="/End90.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/ep1:opacity-100 group-focus/ep1:opacity-100 transition-none" style={{ imageRendering: 'pixelated' }} />
                 </div>
-                <div className="group/s_top6 relative aspect-square overflow-hidden">
-                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s_top6:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
-                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s_top6:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
+                
+                <div tabIndex={0} className="group/s_top6 relative aspect-square overflow-hidden cursor-pointer focus:outline-none">
+                  <img src="/Segment90.png" alt="" className="absolute inset-0 w-full h-full object-fill group-hover/s_top6:opacity-0 group-focus/s_top6:opacity-0 transition-none" style={{ imageRendering: 'pixelated' }} />
+                  <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s_top6:opacity-100 group-focus/s_top6:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
                 </div>
 
               </div>
             </div>
           </div>
 
-          {/* --- [I] Terminal card — live system info with CRT scanline effect --- */}
-          <div tabIndex={0} className="group relative rounded-3xl border-2 border-[#2c3e50] bg-[#121212] p-4 min-h-[150px] lg:min-h-0 flex flex-col overflow-hidden shadow-inner font-mono text-[10px] order-3 lg:order-none focus:outline-none cursor-pointer">
+          {/* --- [I] Terminal card live system info with CRT scanline effect --- */}
+          <div tabIndex={0} className="group relative rounded-3xl border-2 border-[#2c3e50] bg-[#121212] p-4 min-h-[150px] desk:min-h-0 flex flex-col overflow-hidden shadow-inner font-mono text-[10px] order-3 desk:order-none focus:outline-none cursor-pointer">
             
             {/* Scanline Effect */}
             <div className="absolute inset-0 pointer-events-none z-20 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_2px,3px_100%] opacity-50" />
 
             {/* Terminal Header */}
-            <div className="flex gap-1.5 mb-2 opacity-40 group-hover:opacity-100 transition-opacity flex-none">
+            <div className="flex gap-1.5 mb-[9px] opacity-40 group-hover:opacity-100 transition-opacity flex-none">
               <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]" />
               <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_5px_rgba(245,158,11,0.5)]" />
               <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
@@ -1098,11 +1193,12 @@ export default function Home() {
 
             </div>
             {/* Hover state: portfolio scan overlay */}
-            <div className="absolute inset-x-4 top-12 space-y-1.5 text-cyan-400 opacity-0 scale-95 group-hover:opacity-100 group-focus:opacity-100 group-hover:scale-100 group-focus:scale-100 transition-all duration-300 z-10 pointer-events-none">
+            <div className="absolute inset-x-4 top-9 space-y-1.5 text-cyan-400 opacity-0 scale-95 group-hover:opacity-100 group-focus:opacity-100 group-hover:scale-100 group-focus:scale-100 transition-all duration-300 z-10 pointer-events-none">
               <p className="text-white font-bold bg-cyan-900/40 px-1 w-fit mb-2">PORTFOLIO_SCAN</p>
               <p className="flex justify-between"><span>PROBING:</span> <span className="text-white">kmalartre.com</span></p>
               <p className="flex justify-between"><span>FOUND:</span> <span className="text-white text-[9px]">ALL_PROJECTS</span></p>
               <p className="flex justify-between"><span>DETECTED:</span> <span className="text-white text-[9px]">ABSOLUTE_FLOW</span></p>
+              <p className="flex justify-between"><span>COPYRIGHT:</span> <span className="text-white text-[9px]">©_KLN_2026</span></p>
               <div className="mt-2 h-1 w-full bg-cyan-900/50 rounded-full overflow-hidden">
                 <div className="h-full bg-cyan-400 animate-[electricPulse_1.5s_infinite]" style={{ width: '100%' }} />
               </div>
@@ -1113,8 +1209,8 @@ export default function Home() {
             <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
           </div>
 
-          {/* --- [G] GitHub projects banner — carousel with navigation --- */}
-          <div className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-gray-900 to-gray-800 p-5 min-h-[150px] lg:min-h-0 col-span-2 order-5 lg:order-none hover:-translate-y-1 transition-transform overflow-hidden shadow-lg">
+          {/* --- [G] GitHub projects banner carousel with navigation --- */}
+          <div className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-gray-900 to-gray-800 p-5 min-h-[150px] desk:min-h-0 col-span-2 order-5 desk:order-none hover:-translate-y-1 transition-transform overflow-hidden shadow-lg">
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -1172,8 +1268,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* --- [H] Storytelling card — Valentine letter with envelope and QR seal --- */}
-          <div className="group rounded-3xl border-2 border-[#2c3e50] min-h-[200px] lg:min-h-0 col-span-2 order-8 lg:order-none flex flex-col relative shadow-sm z-10 hover:z-50">
+          {/* --- [H] Storytelling card Valentine letter with envelope and QR seal --- */}
+          <div className="group rounded-3xl border-2 border-[#2c3e50] min-h-[200px] desk:min-h-0 col-span-2 order-8 desk:order-none flex flex-col relative shadow-sm z-10 hover:z-50">
             
             {/* Background container: clips the texture and stickers within the card bounds */}
             <div className="absolute inset-0 rounded-[22px] overflow-hidden pointer-events-none -z-10" style={cardBackgroundStyle}>
@@ -1203,7 +1299,7 @@ export default function Home() {
                   <feDisplacementMap in="SourceGraphic" in2="smoothedNoise" scale="5" xChannelSelector="R" yChannelSelector="G" />
                 </filter>
 
-                {/* Lite pencil filter for the QR — low displacement preserves scannability */}
+                {/* Lite pencil filter for the QR low displacement preserves scannability */}
                 <filter id="pencil-filter-lite">
                   <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="5" result="noise" />
                   <feGaussianBlur in="noise" stdDeviation="1.5" result="smoothedNoise" />
@@ -1213,19 +1309,19 @@ export default function Home() {
             </svg>
 
             {/* Main content: title, description, and interactive envelope */}
-            <div className="relative z-10 p-5 flex flex-row items-center justify-between h-full gap-6">
+            <div className="relative z-10 p-5 flex flex-row items-center justify-between h-full gap-8">
               
               <div className={`flex-shrink-0 ${handwrittenFont.className}`}>
-                <h3 className="text-4xl text-[#2c3e50] leading-none" style={{ filter: "url(#pencil-filter)" }}>St. Valentin</h3>
-                <p className="text-[20px] text-rose-500 mt-[-8px]" style={{ filter: "url(#pencil-filter)" }}>Interactive Letter</p>
-                <div className="mt-2 bg-white/40 border border-[#5a4a42]/20 rounded-lg p-2 backdrop-blur-sm font-mono text-[9px]">
+                <h3 className="text-[40px] text-[#2c3e50] leading-none" style={{ filter: "url(#pencil-filter)" }}>St. Valentin</h3>
+                <p className="text-[25px] text-rose-500 mt-[-8px]" style={{ filter: "url(#pencil-filter)" }}>Interactive Letter</p>
+                <div className="mt-2 bg-white/40 border border-[#5a4a42]/20 rounded-lg p-2 backdrop-blur-sm font-mono text-[10px]">
                    <p className="text-[#5a4a42]">AD: STOP-MOTION/DRAW</p>
                    <p className="text-[#5a4a42]">TARGET: MOBILE-ONLY</p>
                 </div>
               </div>
 
               <div className="flex-1 flex items-center justify-center">
-                <div tabIndex={0} className="relative w-[220px] h-[125px] group/env hover:rotate-5 focus:rotate-5 transition-none cursor-pointer focus:outline-none">
+                <div tabIndex={0} className="relative w-[250px] h-[135px] group/env hover:rotate-5 focus:rotate-5 transition-none cursor-pointer focus:outline-none">
                   
                   {/* Envelope body (folded flaps built with clip-path) */}
                   <div className="absolute inset-0 rounded-sm shadow-lg z-0" style={{ ...envelopeFlapStyle, backgroundColor: "#e0cda8" }} />
@@ -1234,27 +1330,36 @@ export default function Home() {
                   <div className="absolute inset-0 z-30" style={{ ...envelopeFlapStyle, clipPath: "polygon(0 100%, 100% 100%, 50% 50%)" }} />
 
                   {/* Hand-drawn envelope outlines via SVG pencil filter */}
-                  <svg className="absolute inset-0 w-full h-full z-30 pointer-events-none" viewBox="0 0 220 125">
+                  <svg className="absolute inset-0 w-full h-full z-30 pointer-events-none" viewBox="0 0 250 135">
                     <g style={{ filter: "url(#pencil-filter)" }} stroke="#5a4a42" strokeWidth="2" fill="none">
-                      <rect x="2" y="2" width="216" height="121" rx="3" />
-                      <path d="M 2 123 L 110 62 L 218 123" />
+                      <rect x="2" y="2" width="246" height="131" rx="3" />
+                      <path d="M 2 133 L 125 67 L 248 133" />
                     </g>
                   </svg>
 
-                  {/* Top flap — slightly darker fill for contrast against the body */}
+                  {/* Top flap slightly darker fill for contrast against the body */}
                   <div className="absolute inset-0 z-40" style={{ ...envelopeFlapStyle, backgroundColor: "#e4d8c0", clipPath: "polygon(0 0, 100% 0, 50% 55%)" }}>
-                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 220 125">
-                        <path style={{ filter: "url(#pencil-filter-lite)" }} stroke="#5a4a42" strokeWidth="4" fill="none" d="M 2 2 L 110 68 L 218 2" />
+                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 250 135">
+                        {/* V-notch path heavier stroke survives the displacement filter without breaking apart */}
+                        <path style={{ filter: "url(#pencil-filter)" }} stroke="#5a4a42" strokeWidth="4" fill="none" d="M 2 2 L 125 74 L 248 2" />
+                        
+                        {/* Top edge path lighter stroke cleanly closes the envelope outline */}
+                        <path style={{ filter: "url(#pencil-filter)" }} stroke="#5a4a42" strokeWidth="3" fill="none" d="M 2 2 Q 125 4.5 248 3" />
                     </svg>
                   </div>
 
-                  {/* Interactive QR code seal — zooms in on hover, links to margaux.love on mobile */}
+                  {/* Interactive QR code seal zooms in on hover, links to margaux.love on mobile */}
                   <div 
-                    onPointerEnter={(e) => { if (e.pointerType === 'mouse') setQrHovered(true); }}
-                    onPointerLeave={(e) => { if (e.pointerType === 'mouse') setQrHovered(false); }}
+                    onPointerEnter={(e) => { 
+                      if (window.innerWidth >= 768 || e.pointerType === 'mouse') setQrHovered(true); 
+                    }}
+                    onPointerLeave={(e) => { 
+                      if (window.innerWidth >= 768 || e.pointerType === 'mouse') setQrHovered(false); 
+                    }}
                     onClick={() => {
+                      // Below 768 px, scanning a zoomed QR code is impractical; redirect directly instead.
                       if (window.innerWidth < 768) {
-                        setQrHovered(false); // Force reset before navigating away on mobile
+                        setQrHovered(false); 
                         window.location.href = 'https://margaux.love';
                       }
                     }}
@@ -1295,7 +1400,7 @@ export default function Home() {
           </div>
 
          {/* --- [F] Inception / Droste effect card (hidden on mobile) --- */}
-          <div className="hidden lg:block">
+          <div className="hidden desk:block">
             <InceptionCase />
           </div>
 

@@ -5,6 +5,7 @@ import type { Viewport } from "next";
 import ZoomLock from "@/components/ZoomLock";
 
 
+// Disables user-initiated zoom to protect the fixed-dimension bento-grid canvas on mobile.
 export const viewport: Viewport = {
   themeColor: '#5b0a0a',
   width: "device-width",
@@ -13,20 +14,27 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+// Primary sans-serif UI font (variable token: --font-geist-sans).
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
+// Monospace font for code and terminal elements (variable token: --font-geist-mono).
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
+// Page-level SEO metadata including Open Graph, Twitter card, canonical URL, and crawler directives.
 export const metadata: Metadata = {
   title: 'Kylian Malartre | Full-stack Explorer',
   description: 'Interactive portfolio of Kylian Malartre, Computer Science student at UBx.',
   
+  other: {
+    google: "notranslate",
+  },
+
   openGraph: {
     title: 'Kylian Malartre | Full-stack Explorer',
     description: 'Diving into multiple projects across the stack, from web development to AI and low level programming.',
@@ -90,9 +98,9 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" translate='no'>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased notranslate`}
       >
         {/* JSON-LD structured data script for SEO */}
         <script

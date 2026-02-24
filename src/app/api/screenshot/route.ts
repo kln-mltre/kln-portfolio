@@ -4,13 +4,13 @@ import puppeteer, { Browser } from 'puppeteer-core';
 // @ts-ignore
 import chromium from '@sparticuz/chromium';
 
-// Singleton browser instance — reused across invocations to avoid repeated cold-start overhead.
+// Singleton browser instance reused across invocations to avoid repeated cold-start overhead.
 let browserInstance: Browser | null = null;
 
 /**
  * Returns a connected Puppeteer browser instance, launching one if none is active.
- * Uses a local Chrome executable in development and Sparticuz Chromium in production
- * to remain within Vercel's serverless deployment constraints.
+ * Selects a local Chrome binary in development and Sparticuz Chromium in production
+ * to satisfy Vercel's serverless read-only filesystem constraints.
  *
  * Args:
  *   None.
@@ -24,11 +24,10 @@ async function getBrowser() {
   const isDev = process.env.NODE_ENV === 'development';
 
   browserInstance = await puppeteer.launch({
-    args: isDev ? ['--no-sandbox', '--disable-setuid-sandbox'] : chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    // Local path is only valid in development; Sparticuz resolves its own binary in production.
-    executablePath: isDev ? '/usr/bin/google-chrome' : await chromium.executablePath(),
-    headless: isDev ? true : chromium.headless,
+    // @sparticuz/chromium ships no TypeScript declarations; cast to any to access its properties safely at build time.
+    args: isDev ? ['--no-sandbox', '--disable-setuid-sandbox'] : (chromium as any).args,
+    executablePath: isDev ? '/usr/bin/google-chrome' : await (chromium as any).executablePath(),
+    headless: isDev ? true : (chromium as any).headless,
   });
   
   return browserInstance;
@@ -42,8 +41,9 @@ const CACHE_DURATION = 3600_000;
 
 /**
  * GET handler for the screenshot API route.
- * Captures a JPEG screenshot of the portfolio homepage at the requested viewport dimensions,
- * with an in-memory TTL cache to prevent redundant browser renders.
+ * Renders the portfolio homepage via headless browser and returns a JPEG screenshot
+ * at the requested viewport dimensions. Results are held in an in-memory TTL cache
+ * to prevent redundant browser renders within the same deployment instance.
  *
  * Args:
  *   request: Incoming Next.js request. Accepts optional `w` and `h` query parameters
@@ -59,7 +59,6 @@ export async function GET(request: NextRequest) {
   const cacheKey = `${w}x${h}`;
   const now = Date.now();
 
-  // Serve the cached buffer when dimensions match and the TTL has not expired.
   if (cachedScreenshot && cachedKey === cacheKey && now - lastCapture < CACHE_DURATION) {
     return new Response(cachedScreenshot, {
       headers: {
@@ -74,19 +73,22 @@ export async function GET(request: NextRequest) {
     const page = await browser.newPage();
     await page.setViewport({ width: w, height: h, deviceScaleFactor: 1 });
 
-    // Derive the target URL from the incoming request host to support both local and Vercel deployments without hardcoding.
+    // Derive target host from the request to avoid hardcoding and handle all deployment environments.
     const host = request.headers.get('host') || 'localhost:3000';
-    // HTTP is enforced locally because the dev server has no TLS certificate; production always uses HTTPS.
-    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+
+    // Matches localhost and common RFC 1918 ranges; HTTP is used locally because the dev server has no TLS certificate.
+    const isLocal = host.includes('localhost') || host.startsWith('172.') || host.startsWith('192.') || host.startsWith('10.') || host.includes('127.0.0.1');
+    const protocol = isLocal ? 'http' : 'https';
+    
     const targetUrl = `${protocol}://${host}?screenshot=1&nocache=${Date.now()}`;
 
     await page.goto(targetUrl, {
       waitUntil: 'domcontentloaded',
-      timeout: 8000, // Kept below Vercel's 10 s serverless function limit to prevent silent timeouts.
+      timeout: 9000, // Kept below Vercel's 10 s function limit to prevent silent timeouts.
     });
 
     // Allow CSS transitions and web fonts to settle before the capture.
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 400));
 
     const screenshot = await page.screenshot({
       type: 'jpeg',
@@ -111,9 +113,6 @@ export async function GET(request: NextRequest) {
     console.error('[Screenshot API] Error:', error);
     // Reset the singleton so the next request launches a fresh, healthy browser instance.
     browserInstance = null;
-    return NextResponse.json(
-      { error: 'Screenshot capture failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Screenshot capture failed' }, { status: 500 });
   }
 }
