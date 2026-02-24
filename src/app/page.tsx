@@ -404,7 +404,7 @@ export default function Home() {
   useEffect(() => {
     const handleResize = () => {
       // Below 570 px height the grid is too compressed to be usable; show the restricted overlay.
-      if (window.innerHeight < 570) {
+      if (window.innerHeight < 478) { 
         setIsRestricted(true);
       } else {
         setIsRestricted(false);
@@ -667,7 +667,7 @@ export default function Home() {
           transformOrigin: 'top center',
         } : {}}
       >
-        <header className="flex-none mb-6 mt-2 desk:mt-0">
+        <header className="flex-none mb-6 mt-2 desk:mt-0 [@media(max-height:610px)]:hidden">
           <h1 className="text-3xl font-black uppercase tracking-tight leading-none">Kylian Malartre</h1>
           <p className="text-lg font-medium opacity-70 mt-1">Computer Science Student at the University of Bordeaux</p>
         </header>
