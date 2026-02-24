@@ -925,9 +925,9 @@ export default function Home() {
               </div>
 
               {/* Dashed SIGUSR1 signal line from Calendar to Worker (runs below the cards) */}
-              <svg className="absolute pointer-events-none overflow-visible" style={{ bottom: '-11px', left: '19%', width: '40%', height: '33px' }} viewBox="0 0 200 30" fill="none" preserveAspectRatio="none">
+              <svg className="absolute pointer-events-none overflow-visible" style={{ bottom: '-6%', left: '19%', width: '41%', height: '25%' }} viewBox="0 0 200 30" fill="none" preserveAspectRatio="none">
                 <path d="M 0,6 Q 155,24 200,2" stroke="rgba(245,158,11,0.4)" strokeWidth="1.5" strokeDasharray="5 4" fill="none" />
-                <text x="120" y="28" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="rgba(245,158,11,0.7)" letterSpacing="1">SIGUSR1</text>
+                <text x="120" y="28" textAnchor="middle" fontSize="10" fontFamily="monospace" fill="rgba(245,158,11,0.7)" letterSpacing="1">SIGUSR1</text>
               </svg>
             </div>
           </div>
@@ -1044,7 +1044,7 @@ export default function Home() {
 
             {/* Puzzle grid each cell is aspect-square for consistent tile alignment */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-full grid grid-cols-4 grid-rows-6 scale-108 translate-y-6 desk:scale-143 desk:translate-y-10" style={{ gap: 0 }}>
+                <div className="w-full grid grid-cols-4 grid-rows-6 scale-120 translate-y-9 desk:scale-143 desk:translate-y-10 desk:row-scale-143" style={{ gap: 0 }}>
                 
                 {/* Row 1 */}
                 <div className="relative aspect-square overflow-hidden"></div>
@@ -1148,7 +1148,7 @@ export default function Home() {
                   <img src="/Segment180.png" alt="" className="absolute inset-0 w-full h-full object-fill opacity-0 group-hover/s_top6:opacity-100 group-focus/s_top6:opacity-100 transition-none" style={{ imageRendering: 'pixelated', transformOrigin: 'center' }} />
                 </div>
 
-              </div>
+                </div>
             </div>
           </div>
 
@@ -1195,7 +1195,7 @@ export default function Home() {
             {/* Hover state: portfolio scan overlay */}
             <div className="absolute inset-x-4 top-9 space-y-1.5 text-cyan-400 opacity-0 scale-95 group-hover:opacity-100 group-focus:opacity-100 group-hover:scale-100 group-focus:scale-100 transition-all duration-300 z-10 pointer-events-none">
               <p className="text-white font-bold bg-cyan-900/40 px-1 w-fit mb-2">PORTFOLIO_SCAN</p>
-              <p className="flex justify-between"><span>PROBING:</span> <span className="text-white">kmalartre.com</span></p>
+              <p className="flex justify-between"><span>PROBING:</span> <span className="text-white">kylianmalartre.com</span></p>
               <p className="flex justify-between"><span>FOUND:</span> <span className="text-white text-[9px]">ALL_PROJECTS</span></p>
               <p className="flex justify-between"><span>DETECTED:</span> <span className="text-white text-[9px]">ABSOLUTE_FLOW</span></p>
               <p className="flex justify-between"><span>COPYRIGHT:</span> <span className="text-white text-[9px]">©_KLN_2026</span></p>
