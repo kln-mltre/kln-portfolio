@@ -23,6 +23,10 @@ async function getBrowser() {
 
   const isDev = process.env.NODE_ENV === 'development';
 
+  if (!isDev) {
+    (chromium as any).setGraphicsMode = false;
+  }
+
   browserInstance = await puppeteer.launch({
       args: isDev ? ['--no-sandbox', '--disable-setuid-sandbox'] : (chromium as any).args,
       defaultViewport: isDev ? { width: 1280, height: 960 } : (chromium as any).defaultViewport,
