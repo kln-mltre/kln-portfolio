@@ -24,11 +24,11 @@ async function getBrowser() {
   const isDev = process.env.NODE_ENV === 'development';
 
   browserInstance = await puppeteer.launch({
-    // @sparticuz/chromium ships no TypeScript declarations; cast to any to access its properties safely at build time.
-    args: isDev ? ['--no-sandbox', '--disable-setuid-sandbox'] : (chromium as any).args,
-    executablePath: isDev ? '/usr/bin/google-chrome' : await (chromium as any).executablePath(),
-    headless: isDev ? true : (chromium as any).headless,
-  });
+      args: isDev ? ['--no-sandbox', '--disable-setuid-sandbox'] : (chromium as any).args,
+      defaultViewport: isDev ? { width: 1280, height: 960 } : (chromium as any).defaultViewport,
+      executablePath: isDev ? '/usr/bin/google-chrome' : await (chromium as any).executablePath(),
+      headless: isDev ? true : (chromium as any).headless,
+    });
   
   return browserInstance;
 }
