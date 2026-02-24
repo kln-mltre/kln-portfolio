@@ -7,6 +7,7 @@ import ZoomLock from "@/components/ZoomLock";
 
 // Disables user-initiated zoom to protect the fixed-dimension bento-grid canvas on mobile.
 export const viewport: Viewport = {
+  colorScheme: 'only light',
   themeColor: '#5b0a0a',
   width: "device-width",
   initialScale: 1,
