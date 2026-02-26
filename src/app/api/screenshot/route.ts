@@ -87,12 +87,12 @@ export async function GET(request: NextRequest) {
     const targetUrl = `${protocol}://${host}?screenshot=1&nocache=${Date.now()}`;
 
     await page.goto(targetUrl, {
-      waitUntil: 'networkidle2',
+      waitUntil: 'networkidle2', // Wait for the initial HTML to load, but not necessarily all subresources.
       timeout: 9000, // Kept below Vercel's 10 s function limit to prevent silent timeouts.
     });
 
     // Allow CSS transitions and web fonts to settle before the capture.
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(r => setTimeout(r, 100));
 
     const screenshot = await page.screenshot({
       type: 'jpeg',

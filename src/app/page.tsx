@@ -158,6 +158,15 @@ const InceptionCase = () => {
   // Render a static placeholder during screenshot capture to break the Droste recursion.
   if (isScreenshotMode) {
     return (
+      <>
+        {/* On gèle le temps : plus aucune animation ne s'exécute pour le robot */}
+        <style dangerouslySetInnerHTML={{__html: `
+          * {
+            transition: none !important;
+            animation: none !important;
+            animation-duration: 0ms !important;
+          }
+        `}} />
       <div className="relative min-h-[150px] desk:min-h-0 w-full h-full">
         <div 
           className="absolute inset-0 border-0 border-[#2c3e50] bg-[#fdf6e3] rounded-3xl overflow-hidden shadow-lg"
@@ -180,6 +189,7 @@ const InceptionCase = () => {
           </div>
         </div>
       </div>
+      </>
     );
   }
 
