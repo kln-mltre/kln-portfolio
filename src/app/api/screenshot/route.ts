@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
     const targetUrl = `${protocol}://${host}?screenshot=1&nocache=${Date.now()}`;
 
     await page.goto(targetUrl, {
-      waitUntil: 'networkidle2', // Wait for the initial HTML to load, but not necessarily all subresources.
+      waitUntil: 'networkidle2',
       timeout: 9000, // Kept below Vercel's 10 s function limit to prevent silent timeouts.
     });
 

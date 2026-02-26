@@ -159,7 +159,6 @@ const InceptionCase = () => {
   if (isScreenshotMode) {
     return (
       <>
-        {/* On gèle le temps : plus aucune animation ne s'exécute pour le robot */}
         <style dangerouslySetInnerHTML={{__html: `
           * {
             transition: none !important;
