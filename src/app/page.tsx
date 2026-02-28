@@ -359,51 +359,52 @@ const InceptionCase = () => {
  *   The full-page portfolio layout as a React element.
  */
 export default function Home() {
-  const projects = [
-    { 
-      name: 'kln-portfolio', 
-      desc: 'Interactive personal portfolio', 
-      tags: 'Next.js • TypeScript • Tailwind', 
-      stars: 4, 
-      url: 'https://github.com/kln-mltre/kln-portfolio' 
-    },
-    { 
-      name: 'KlipScheduler', 
-      desc: 'Full automation of TikTok clip scheduling & publishing', 
-      tags: 'Python • Playwright • UNIX Signals', 
-      stars: 5, 
-      url: 'https://github.com/kln-mltre/KlipScheduler' 
-    },
-    { 
-      name: 'KlipMachine', 
-      desc: 'AI-powered viral TikTok clip generator', 
-      tags: 'Python • Whisper AI • FFmpeg', 
-      stars: 3, 
-      url: 'https://github.com/kln-mltre/KlipMachine' 
-    },
-    { 
-      name: 'net-a22', 
-      desc: 'Logic puzzle game built with SDL', 
-      tags: 'C • SDL • Algorithms', 
-      stars: 4, 
-      url: 'https://github.com/kln-mltre/net-a22' 
-    },
-    { 
-      name: 'margaux-love-letter', 
-      desc: 'Interactive stop-motion love letter', 
-      tags: 'React • Next.js • Tailwind', 
-      stars: 3, 
-      url: 'https://github.com/kln-mltre/margaux-love-letter' 
-    },
-  ];
+  // --- Projects data state ---
+  const [projects, setProjects] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  /**
+   * Fetches the project configuration from a remote GitHub Gist.
+   * This allows real-time content updates without repository commits.
+   *
+   * Returns:
+   * void. Updates the 'projects' and 'isLoading' states.
+   */
+  useEffect(() => {
+    const fetchRemoteConfig = async () => {
+      try {
+        const GIST_URL = 'https://gist.githubusercontent.com/kln-mltre/e43307492ed0af300f3dd61dfedc039e/raw/projects.json';
+        
+        const response = await fetch(`${GIST_URL}?t=${new Date().getTime()}`, { 
+          cache: 'no-store' 
+        });
+
+        const data = await response.json();
+        setProjects(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("[RemoteConfig] Error loading Gist data:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchRemoteConfig();
+  }, []);
 
   // --- GitHub carousel state and navigation ---
   const [currentProject, setCurrentProject] = useState(0);
 
   /** Advances the GitHub carousel to the next project (wraps around). */
-  const nextProject = () => setCurrentProject((prev) => (prev + 1) % projects.length);
+  const nextProject = () => {
+    if (projects.length === 0) return;
+    setCurrentProject((prev) => (prev + 1) % projects.length);
+  };
+  
   /** Moves the GitHub carousel to the previous project (wraps around). */
-  const prevProject = () => setCurrentProject((prev) => (prev - 1 + projects.length) % projects.length);
+  const prevProject = () => {
+    if (projects.length === 0) return;
+    setCurrentProject((prev) => (prev - 1 + projects.length) % projects.length);
+  };
 
   // --- Layout / viewport scaling ---
   const [pageScale, setPageScale] = useState(1);
@@ -1245,24 +1246,30 @@ export default function Home() {
             </div>
 
             {/* Project carousel */}
-            <a 
-              href={projects[currentProject].url || "#"}
-              target="_blank"
-              rel="noopener noreferrer" 
-              className="block bg-gray-800/50 rounded-xl p-2 border border-gray-700 hover:bg-gray-700/60 hover:border-gray-500 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1">
-                  <h4 className="font-bold text-white text-base">{projects[currentProject].name}</h4>
-                  <p className="text-sm text-gray-300 mt-1">{projects[currentProject].desc}</p>
-                  <p className="text-xs text-gray-400 mt-2">{projects[currentProject].tags}</p>
+            {projects.length > 0 ? (
+              <a 
+                href={projects[currentProject]?.url || "#"}
+                target="_blank"
+                rel="noopener noreferrer" 
+                className="block bg-gray-800/50 rounded-xl p-2 border border-gray-700 hover:bg-gray-700/60 hover:border-gray-500 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1">
+                    <h4 className="font-bold text-white text-base">{projects[currentProject]?.name}</h4>
+                    <p className="text-sm text-gray-300 mt-1">{projects[currentProject]?.desc}</p>
+                    <p className="text-xs text-gray-400 mt-2">{projects[currentProject]?.tags}</p>
+                  </div>
+                  <div className="flex items-center gap-1 text-gray-400">
+                    <span className="text-yellow-400">⭐</span>
+                    <span className="text-sm">{projects[currentProject]?.stars}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 text-gray-400">
-                  <span className="text-yellow-400">⭐</span>
-                  <span className="text-sm">{projects[currentProject].stars}</span>
-                </div>
+              </a>
+            ) : (
+              <div className="block bg-gray-800/50 rounded-xl p-2 border border-gray-700 h-[88px] flex items-center justify-center">
+                <span className="animate-pulse text-gray-500 text-xs">Loading...</span>
               </div>
-            </a>
+            )}
 
             {/* Dots indicator */}
             <div className="flex items-center justify-center gap-1.5 mt-3">
