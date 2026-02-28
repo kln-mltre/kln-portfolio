@@ -109,6 +109,7 @@ const NetworkTrace = () => {
  */
 const InceptionCase = () => {
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [isDiving, setIsDiving] = useState(false);
   const [diveBoxStyle, setDiveBoxStyle] = useState<React.CSSProperties>({});
   
@@ -312,9 +313,9 @@ const InceptionCase = () => {
       <div
         ref={boxRef}
         onClick={triggerDive}
-        className={`absolute inset-0 cursor-pointer group overflow-hidden transition-all duration-500 rounded-3xl ${
-          screenshotUrl ? 'border-2 border-[#2c3e50] shadow-lg opacity-100' : 'opacity-0'
-        } ${isDiving ? 'opacity-0' : 'hover:-translate-y-1'}`}
+        className={`absolute inset-0 cursor-pointer group overflow-hidden transition-all duration-500 rounded-3xl border-2 border-[#2c3e50] shadow-lg ${
+          isDiving ? 'opacity-0' : 'opacity-100 hover:-translate-y-1'
+        }`}
         style={{
           backgroundImage: `
             linear-gradient(rgba(44, 62, 80, 0.06) 1px, transparent 1px),
@@ -326,14 +327,45 @@ const InceptionCase = () => {
           backgroundPosition: '-1px -1px, -1px -1px, -1px -1px, -1px -1px'
         }}
       >
-        {screenshotUrl ? (
-          <img src={screenshotUrl} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" draggable={false} />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-             <div className="flex flex-col items-center opacity-30">
-               <Terminal className="text-[#2c3e50] mb-2" size={24} />
-               <span className="text-[#2c3e50] text-[8px] font-mono tracking-widest font-bold">CAPTURING...</span>
-             </div>
+        {screenshotUrl && (
+          <img 
+            src={screenshotUrl} 
+            alt="" 
+            className={`absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`} 
+            draggable={false} 
+            onLoad={() => setIsLoaded(true)} 
+          />
+        )}
+
+        {!isLoaded && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/20 backdrop-blur-[2px]">
+            {/* Viewfinder Corners */}
+            <div className="absolute top-6 left-6 w-6 h-6 border-t-2 border-l-2 border-[#2c3e50]/30 rounded-tl-sm" />
+            <div className="absolute top-6 right-6 w-6 h-6 border-t-2 border-r-2 border-[#2c3e50]/30 rounded-tr-sm" />
+            <div className="absolute bottom-6 left-6 w-6 h-6 border-b-2 border-l-2 border-[#2c3e50]/30 rounded-bl-sm" />
+            <div className="absolute bottom-6 right-6 w-6 h-6 border-b-2 border-r-2 border-[#2c3e50]/30 rounded-br-sm" />
+            
+            {/* Animated Aperture / Focus Symbol */}
+            <div className="relative flex items-center justify-center">
+              <div className="absolute w-16 h-16 border border-[#2c3e50]/10 rounded-full animate-[ping_3s_infinite]" />
+              <div className="absolute w-12 h-12 border-2 border-[#2c3e50]/20 rounded-full animate-[pulse_2s_infinite]" />
+              <Sparkles className="text-[#2c3e50]/40" size={32} />
+            </div>
+
+            <div className="mt-8 flex flex-col items-center gap-1">
+              <span className="text-[#2c3e50]/60 text-[10px] font-bold tracking-[0.4em] uppercase">
+                Developing...
+              </span>
+              <div className="flex gap-1">
+                {[...Array(3)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="w-1 h-1 bg-[#2c3e50]/40 rounded-full animate-bounce" 
+                    style={{ animationDelay: `${i * 0.2}s` }} 
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
