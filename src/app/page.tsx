@@ -164,9 +164,9 @@ export default function Home() {
           <MailboxCard />
 
           <FlipCard 
-            className="row-span-1 desk:col-span-2"
-            front={<KlipMachineCard />} 
-            back={<KlipSchedulerCard />} 
+            className="row-span-1 col-span-2 order-4 desk:order-none"
+            front={<KlipSchedulerCard />}
+            back={<KlipMachineCard />} 
           />
 
           <KlipMachineCard />
