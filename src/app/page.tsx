@@ -15,6 +15,7 @@ import GithubCard from '@/components/cards/GithubCard';
 import ValentineCard from '@/components/cards/ValentineCard';
 
 import InceptionCase from '@/components/cards/InceptionCase';
+import FlipCard from '@/components/ui/FlipCard';
 
 /**
  * Main portfolio page component.
@@ -162,7 +163,11 @@ export default function Home() {
 
           <MailboxCard />
 
-          <KlipSchedulerCard />
+          <FlipCard 
+            className="row-span-1 desk:col-span-2"
+            front={<KlipMachineCard />} 
+            back={<KlipSchedulerCard />} 
+          />
 
           <KlipMachineCard />
 

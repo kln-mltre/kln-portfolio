@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import type { Viewport } from "next";
-import ZoomLock from "@/components/ZoomLock";
+import ZoomLock from "@/components/ui/ZoomLock";
 
 
 // Disables user-initiated zoom to protect the fixed-dimension bento-grid canvas on mobile.
