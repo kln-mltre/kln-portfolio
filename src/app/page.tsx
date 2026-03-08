@@ -132,7 +132,7 @@ export default function Home() {
         } : {}}
       >
         <header className="flex-none flex justify-between items-start mb-6 mt-2 desk:mt-0 [@media(max-height:610px)]:hidden">
-          <div>
+          <div className='pr-24'>
             <h1 className="text-3xl font-black uppercase tracking-tight leading-none">Kylian Malartre</h1>
             <p className="text-lg font-medium opacity-70 mt-1">Computer Science Student at the University of Bordeaux</p>
           </div>
@@ -142,13 +142,13 @@ export default function Home() {
             href="https://github.com/KAE-Lab" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="absolute top-[5px] right-[25px] transition-transform duration-300 hover:scale-110 focus:scale-110 outline-none origin-center"
+            className="absolute top-[7px] desk:top-[5px] right-[10px] desk:right-[25px] transition-transform duration-300 hover:scale-110 focus-visible:scale-110 outline-none origin-center"
             aria-label="KAE-Lab GitHub Organization"
           >
             <img 
               src="/logo-kae-lab.png" 
               alt="KAE-Lab Logo" 
-              className="h-30 w-auto object-contain opacity-85 hover:opacity-100 transition-opacity duration-300 drop-shadow-sm"
+              className="h-24 desk:h-30 w-auto object-contain opacity-95 hover:opacity-100 transition-opacity duration-300 drop-shadow-sm"
             />
           </a>
         </header>
