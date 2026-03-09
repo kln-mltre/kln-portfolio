@@ -277,7 +277,7 @@ export default function InceptionCase() {
       {/* Original card in the grid. */}
       <div
         onClick={triggerDive}
-        className={`absolute inset-0 cursor-pointer group overflow-hidden transition-opacity duration-200 rounded-3xl border-2 border-[#2c3e50] shadow-lg ${
+        className={`absolute inset-0 cursor-pointer group overflow-hidden transition duration-200 ease-out rounded-3xl border-2 border-[#2c3e50] shadow-lg ${
           isCardHidden ? 'opacity-0' : 'opacity-100 hover:-translate-y-1'
         }`}
         style={gridBg}

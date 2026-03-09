@@ -76,8 +76,8 @@ export default function ValentineCard() {
     return () => clearInterval(id);
   }, [qrHovered]);
 
-  // Progressive scale values per frame final size deliberately overshoots then settles for punch
-  const qrScales = [1, 1.8, 2.8, 4.2, 4];
+  // Progressive scale values: generating at max size and scaling down to 0.25 for WebKit clarity
+  const qrScales = [0.25, 0.45, 0.7, 1.05, 1];
   
   // Wobble runs only during the transition frames; stabilizes once fully zoomed in (frame 4)
   const isWobbling = (qrHovered || qrState.frame > 0) && qrState.frame < 4;
@@ -207,17 +207,17 @@ export default function ValentineCard() {
                       transition: 'none' 
                     }}
                   >
-                    {/* Layered structure: filtered border + crisp unfiltered QR image */}
-                    <div className="relative w-14 h-14 shadow-md rounded">
+                    {/* Layered structure: generated at 4x resolution (224px) to prevent WebKit blur on zoom */}
+                    <div className="relative w-[224px] h-[224px] shadow-2xl rounded-2xl">
                       
                       {/* Layer 1: white background and hand-drawn border (strong filter) */}
                       <div 
-                        className="absolute inset-0 bg-white border-2 border-[#5a4a42] rounded"
+                        className="absolute inset-0 bg-white border-[8px] border-[#5a4a42] rounded-2xl"
                         style={{ filter: "url(#pencil-filter)" }} 
                       />
                       
                       {/* Layer 2: crisp QR image clipped inside the border (no filter applied) */}
-                      <div className="absolute inset-[2px] overflow-hidden bg-white rounded-sm flex items-center justify-center">
+                      <div className="absolute inset-[8px] overflow-hidden bg-white rounded-lg flex items-center justify-center">
                         <img 
                           src="/qrcode.svg" 
                           alt="QR Code St Valentin" 
