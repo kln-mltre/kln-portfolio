@@ -5,7 +5,7 @@ export default function MailboxCard() {
   return (
     <>
       {/* --- [B] Contact card 3D mailbox with flag and interactive letter --- */}
-        <div tabIndex={0} className="group relative rounded-4xl border-2 border-[#2c3e50] bg-gradient-to-br from-[#681212] to-[#450505] min-h-[150px] desk:min-h-0 overflow-visible shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] cursor-pointer z-10 hover:z-50 focus:z-50 perspective-[1000px] order-2 desk:order-none focus:outline-none">
+        <div tabIndex={0} className="group relative rounded-4xl border-2 border-[#2c3e50] bg-gradient-to-br from-[#681212] to-[#450505] min-h-[150px] desk:min-h-0 overflow-visible shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] cursor-pointer z-10 hover:z-50 focus:z-50 order-2 desk:order-none focus:outline-none">
         
         {/* Inner door groove decoration */}
         <div className="absolute inset-2 border border-black/30 rounded-3xl shadow-[0_1px_0_rgba(255,255,255,0.1)] pointer-events-none z-0"></div>
@@ -74,7 +74,7 @@ export default function MailboxCard() {
             <div className="pt-2 pb-4 flex flex-col items-center justify-center relative z-10">
                 <Mail className="mb-2 text-red-500" size={26} />
                 <p className="text-[17px] mt-[-4px] font-bold text-gray-800 leading-tight">Contact</p>
-                <p className="text-[14px] font-semibold text-gray-600 mt-1">kylian.malartre@gmail.com</p>
+                <p className="text-[15px] font-semibold text-gray-600 mt-1">kylian.malartre@gmail.com</p>
             </div>
             </div>
         </div>
