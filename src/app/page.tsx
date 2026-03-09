@@ -13,6 +13,8 @@ import NetPuzzleCard from '@/components/cards/NetPuzzleCard';
 import TerminalCard from '@/components/cards/TerminalCard';
 import GithubCard from '@/components/cards/GithubCard';
 import ValentineCard from '@/components/cards/ValentineCard';
+import BuildingCard from '@/components/cards/BuildingCard';
+
 
 import InceptionCase from '@/components/cards/InceptionCase';
 import FlipCard from '@/components/ui/FlipCard';
@@ -169,7 +171,7 @@ export default function Home() {
             back={<KlipMachineCard />} 
           />
 
-          <KlipMachineCard />
+          <BuildingCard />
 
           <NetPuzzleCard />
 

@@ -69,3 +69,30 @@ body {
     opacity: 0;
   }
 }
+
+/* --- BuildingCard animations --- */
+
+@keyframes stripeScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 23px 23px; }
+}
+
+@keyframes cableSway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-4px); opacity: 1; }
+}
+
+@keyframes workerWalk {
+  0% { transform: translateX(-30px); }
+  100% { transform: translateX(calc(100cqw + 30px)); }
+}
+
+@keyframes workerBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}

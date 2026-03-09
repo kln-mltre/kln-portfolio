@@ -57,6 +57,7 @@ export default function FlipCard({ front, back, className = '' }: FlipCardProps)
         }`}
       >
         {back}
+        <Badge />
       </div>
     </div>
   );
