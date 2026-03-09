@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000" role="img" aria-label="Miniature de la grille portfolio">
+  <defs>
+    <pattern id="gridMajor" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(44,62,80,0.08)" stroke-width="1"/>
+    </pattern>
+    <pattern id="gridMinor" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(44,62,80,0.03)" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="darkCard" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111c33"/>
+      <stop offset="100%" stop-color="#1a2c4a"/>
+    </linearGradient>
+    <linearGradient id="blueCard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#30a7e6"/>
+      <stop offset="100%" stop-color="#7dd6ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="1000" fill="#fdf6e3"/>
+  <rect width="1000" height="1000" fill="url(#gridMinor)"/>
+  <rect width="1000" height="1000" fill="url(#gridMajor)"/>
+
+  <!-- Grid only (square composition) -->
+  <g transform="translate(40,130)">
+    <rect x="0" y="0" width="220" height="320" rx="26" fill="#6f0707" stroke="#24364a" stroke-width="4"/>
+    <rect x="240" y="0" width="220" height="160" rx="26" fill="#7a0808" stroke="#24364a" stroke-width="4"/>
+    <rect x="480" y="0" width="440" height="160" rx="26" fill="url(#darkCard)" stroke="#24364a" stroke-width="4"/>
+
+    <rect x="240" y="180" width="460" height="160" rx="26" fill="#2e1a07" stroke="#24364a" stroke-width="4"/>
+    <rect x="720" y="180" width="200" height="560" rx="26" fill="url(#blueCard)" stroke="#24364a" stroke-width="4"/>
+
+    <rect x="0" y="360" width="220" height="160" rx="26" fill="#0f1626" stroke="#24364a" stroke-width="4"/>
+    <rect x="240" y="360" width="460" height="160" rx="26" fill="url(#darkCard)" stroke="#24364a" stroke-width="4"/>
+
+    <rect x="0" y="540" width="460" height="200" rx="26" fill="#efe9dc" stroke="#8f856f" stroke-width="4"/>
+    <rect x="480" y="540" width="220" height="200" rx="26" fill="#d5d7db" stroke="#24364a" stroke-width="4"/>
+
+    <!-- subtle details (minimal but readable) -->
+    <rect x="20" y="24" width="120" height="14" rx="7" fill="rgba(255,255,255,0.18)"/>
+    <rect x="20" y="48" width="78" height="10" rx="5" fill="rgba(255,255,255,0.14)"/>
+
+    <rect x="258" y="24" width="184" height="16" rx="8" fill="rgba(0,0,0,0.22)"/>
+    <rect x="498" y="24" width="168" height="14" rx="7" fill="rgba(255,255,255,0.12)"/>
+    <rect x="500" y="58" width="70" height="78" rx="10" fill="rgba(255,179,0,0.18)"/>
+    <rect x="584" y="58" width="70" height="78" rx="10" fill="rgba(0,180,255,0.16)"/>
+    <rect x="668" y="58" width="70" height="78" rx="10" fill="rgba(255,0,128,0.14)"/>
+    <rect x="752" y="58" width="70" height="78" rx="10" fill="rgba(149,0,255,0.14)"/>
+
+    <rect x="258" y="194" width="420" height="12" rx="6" fill="#ffb300" opacity="0.75"/>
+    <rect x="18" y="376" width="120" height="10" rx="5" fill="#00b26a" opacity="0.7"/>
+    <rect x="258" y="388" width="420" height="54" rx="14" fill="rgba(255,255,255,0.05)"/>
+
+    <rect x="22" y="558" width="160" height="12" rx="6" fill="rgba(44,62,80,0.35)"/>
+    <rect x="54" y="590" width="350" height="92" rx="10" fill="#d8bf91" opacity="0.9"/>
+
+    <path d="M748 208h18v468h-18zM814 286h18v374h-18z" fill="#1da56f" opacity="0.9"/>
+    <path d="M738 678h122v14H738z" fill="#1da56f" opacity="0.9"/>
+  </g>
+</svg>

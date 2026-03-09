@@ -1,10 +1,5 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
-  serverExternalPackages: ['@sparticuz/chromium'],
-  outputFileTracingIncludes: {
-    '/api/screenshot': ['./node_modules/@sparticuz/chromium/bin/**/*'],
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
