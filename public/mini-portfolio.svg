@@ -21,7 +21,7 @@
   <rect width="1000" height="1000" fill="url(#gridMajor)"/>
 
   <!-- Grid only (square composition) -->
-  <g transform="translate(40,130)">
+  <g transform="translate(86,130) scale(0.9,1)">
     <rect x="0" y="0" width="220" height="320" rx="26" fill="#6f0707" stroke="#24364a" stroke-width="4"/>
     <rect x="240" y="0" width="220" height="160" rx="26" fill="#7a0808" stroke="#24364a" stroke-width="4"/>
     <rect x="480" y="0" width="440" height="160" rx="26" fill="url(#darkCard)" stroke="#24364a" stroke-width="4"/>
