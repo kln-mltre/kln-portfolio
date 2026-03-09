@@ -145,9 +145,12 @@ export default function Home() {
             href="https://github.com/KAE-Lab" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="absolute top-[7px] desk:top-[5px] right-[10px] desk:right-[25px] transition-transform duration-300 hover:scale-110 focus-visible:scale-110 outline-none origin-center"
+            className="group absolute top-[7px] desk:top-[5px] right-[10px] desk:right-[25px] transition-transform duration-300 hover:scale-110 focus-visible:scale-110 outline-none origin-center"
             aria-label="KAE-Lab GitHub Organization"
           >
+            <span className="hidden desk:block absolute right-full top-1/2 -translate-y-1/2 mr-2 px-2.5 py-1 rounded-lg bg-white/10 backdrop-blur-xl border border-white/25 shadow-[0_2px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] text-[#2c3e50] text-[13px] font-mono font-bold uppercase tracking-wider whitespace-nowrap opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-focus-visible:opacity-100 group-focus-visible:translate-x-0 transition-all duration-200 pointer-events-none">
+              KAE Lab
+            </span>
             <img 
               src="/logo-kae-lab.png" 
               alt="KAE-Lab Logo" 
