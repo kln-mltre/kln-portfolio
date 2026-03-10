@@ -16,10 +16,13 @@ export default function BuildingCard() {
     <div className="rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-b from-[#1a1207] to-[#2a1a08] min-h-[200px] desk:min-h-0 col-span-2 order-7 desk:order-none flex flex-col overflow-hidden shadow-lg relative [container-type:inline-size]">
 
       {/* Hazard tape top */}
-      <div
-        className="h-3 w-full animate-[stripeScroll_4s_linear_infinite] flex-none"
-        style={{ backgroundImage: 'repeating-linear-gradient(-45deg, #f59e0b, #f59e0b 8px, #1c1917 8px, #1c1917 16px)', backgroundSize: '23px 23px' }}
-      />
+      <div className="h-3 w-full flex-none overflow-hidden relative">
+        {/* An oversised inner wrapper allows GPU-accelerated translation to replace heavy CPU background repaints */}
+        <div
+          className="absolute top-0 bottom-0 left-0 w-[calc(100%+46px)] animate-[stripeScroll_4s_linear_infinite]"
+          style={{ backgroundImage: 'repeating-linear-gradient(-45deg, #f59e0b, #f59e0b 8px, #1c1917 8px, #1c1917 16px)', backgroundSize: '23px 23px' }}
+        />
+      </div>
 
       {/* Title */}
       <div className="flex-none flex items-center justify-center pt-3 pb-1 px-4 relative z-20">
@@ -113,10 +116,14 @@ export default function BuildingCard() {
       </div>
 
       {/* Hazard tape bottom */}
-      <div
-        className="h-3 w-full animate-[stripeScroll_4s_linear_infinite_reverse] flex-none"
-        style={{ backgroundImage: 'repeating-linear-gradient(-45deg, #f59e0b, #f59e0b 8px, #1c1917 8px, #1c1917 16px)', backgroundSize: '23px 23px' }}
-      />
+      <div className="h-3 w-full flex-none overflow-hidden relative">
+        {/* Same technique for the bottom tape to ensure a 60fps reverse scroll */}
+        <div
+          className="absolute top-0 bottom-0 left-0 w-[calc(100%+46px)] animate-[stripeScroll_4s_linear_infinite_reverse]"
+          style={{ backgroundImage: 'repeating-linear-gradient(-45deg, #f59e0b, #f59e0b 8px, #1c1917 8px, #1c1917 16px)', backgroundSize: '23px 23px' }}
+        />
+      </div>
+      
     </div>
   );
 }
