@@ -13,7 +13,7 @@ This portfolio utilizes a **Bento Grid** architecture to organize my projects in
 
 ## Features
 
-- **Recursive "Inception" Engine:** A self-referencing card using a handcrafted miniature preview and a live DOM-clone three-phase "dive" animation (Detach, Morph, Reset) driven by `requestAnimationFrame`.
+- **Recursive "Inception" Engine:** A self-referencing card utilizing the native View Transitions API to capture a hardware-accelerated, GPU-level viewport screenshot. This enables a seamless 60fps "dive" animation without VRAM saturation.
 - **Concurrent System Probing:** Real-time environment analysis executing concurrent `Promise.all` tasks to fetch IP/ISP metadata and calculate network latency via `performance.now()` measurements.
 - **Analog Narrative Engine (Valentine):** An integrated visual system combining `feDisplacementMap` SVG filters for "pencil-drawn" textures, `clip-path` polygons for 3D envelope physics, and a custom stop-motion `MiniSticker` component for randomized sprite-toggling.
 - **UX & Performance Optimization:** Implementation of a `ZoomLock` component and viewport constraints to prevent accidental scaling on mobile devices. Uses hydration-safe logic to prevent SSR/CSR mismatches during system data fetching.
