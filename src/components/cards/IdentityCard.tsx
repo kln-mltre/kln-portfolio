@@ -50,7 +50,7 @@ export default function IdentityCard() {
 
     {/* Polaroid photo with hover lift and shine effect */}
     <div tabIndex={0} className="absolute bottom-4 right-3 desk:right-4 z-10 group cursor-pointer focus:outline-none">
-        <div className="bg-[#fdf6e3] p-1.5 pb-6 shadow-2xl rotate-3 transform transition-all group-hover:rotate-1 group-focus:rotate-1 group-hover:-translate-y-4 group-focus:-translate-y-4 duration-500 overflow-hidden relative">
+        <div className="bg-[#fdf6e3] p-1.5 pb-6 shadow-2xl transform transition-all group-hover:-translate-y-4 group-focus:-translate-y-4 duration-500 overflow-hidden relative">
         
         <div className="w-24 h-auto border-2 border-[#2c3e50]/10 overflow-hidden relative z-10">
             <img src="/PP.png" alt="Kylian" className="w-full h-full object-cover" />
