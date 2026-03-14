@@ -149,9 +149,17 @@ export default function ValentineCard() {
             <div className="relative z-10 p-5 flex flex-row items-center justify-between h-full gap-8">
               
               <div className={`flex-shrink-0 ${handwrittenFont.className}`}>
-                <h3 className="text-[40px] text-[#2c3e50] leading-none" style={{ filter: "url(#pencil-filter)" }}>St. Valentin</h3>
-                <p className="text-[25px] text-rose-500 mt-[-8px]" style={{ filter: "url(#pencil-filter)" }}>Interactive Letter</p>
-                <div className="mt-2 bg-white/40 border border-[#5a4a42]/20 rounded-lg p-2 backdrop-blur-sm font-mono text-[10px]">
+                <a 
+                  href="https://github.com/kln-mltre/margaux-love-letter" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block cursor-pointer hover:-rotate-3 hover:scale-105 transition-none origin-center w-fit"
+                >
+                  <h3 className="text-[40px] text-[#2c3e50] leading-none">St. Valentin</h3>
+                  <p className="text-[25px] text-rose-500 mt-[-8px]">Interactive Letter</p>
+                </a>
+                
+                <div className="mt-2 bg-white/40 border border-[#5a4a42]/20 rounded-lg p-2 backdrop-blur-sm font-mono text-[10px] w-fit">
                    <p className="text-[#5a4a42]">AD: STOP-MOTION/DRAW</p>
                    <p className="text-[#5a4a42]">TARGET: MOBILE-ONLY</p>
                 </div>

@@ -24,9 +24,16 @@ export default function NetPuzzleCard() {
 
             {/* Game title (uses the custom pixel font) */}
             <div className={`absolute top-3 desk:top-8 inset-x-0 z-10 flex flex-col items-center justify-center leading-none select-none pointer-events-none ${pixelFont.className}`}>
-              <h3 className="text-[34px] desk:text-[38px] text-[#ffffff] uppercase">
-                Net Puzzle
-              </h3>
+              <a 
+                href="https://github.com/kln-mltre/net-a22" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="pointer-events-auto cursor-pointer hover:scale-110 origin-center"
+              >
+                <h3 className="text-[34px] desk:text-[38px] text-[#ffffff] uppercase">
+                  Net Puzzle
+                </h3>
+              </a>
             </div>
 
             {/* Puzzle grid each cell is aspect-square for consistent tile alignment */}

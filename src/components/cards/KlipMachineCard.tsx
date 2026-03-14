@@ -8,8 +8,17 @@ export default function KlipMachineCard() {
           <div tabIndex={0} className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-5 min-h-[200px] desk:min-h-0 col-span-2 order-7 desk:order-none flex flex-col overflow-hidden shadow-lg relative cursor-pointer focus:outline-none">
             {/* Header */}
             <div className="flex items-center gap-2 mb-1 flex-none">
-              <Scissors className="text-cyan-400" size={22} />
-              <h3 className="font-bold text-lg text-white leading-tight">KlipMachine</h3>
+              <a 
+                href="https://github.com/kln-mltre/KlipMachine" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 group/title cursor-pointer transition-transform duration-200 hover:translate-x-1"
+              >
+                <Scissors className="text-cyan-400 group-hover/title:text-cyan-300 transition-colors" size={22} />
+                <h3 className="font-bold text-lg text-white group-hover/title:text-cyan-300 group-hover/title:underline underline-offset-4 decoration-cyan-400/50 transition-all leading-tight">
+                  KlipMachine
+                </h3>
+              </a>
               <span className="ml-auto text-[10px] text-slate-300 font-mono leading-tight text-right">AI pipeline to turn YouTube videos<br/>into viral TikTok moments</span>
             </div>
 
