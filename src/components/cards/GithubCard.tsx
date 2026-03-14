@@ -62,10 +62,16 @@ export default function GithubCard() {
           <div className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-gray-900 to-gray-800 p-5 min-h-[150px] desk:min-h-0 col-span-2 order-5 desk:order-none hover:-translate-y-1 transition-transform overflow-hidden shadow-lg">
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
+              <a
+                href="https://github.com/kln-mltre"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open GitHub profile"
+                className="flex items-center gap-2 group/profile rounded-md focus:outline-none focus:ring-2 focus:ring-white/30"
+              >
                 <Github className="text-white" size={24} />
-                <h3 className="font-bold text-lg text-white leading-tight">GitHub Projects</h3>
-              </div>
+                <h3 className="font-bold text-lg text-white leading-tight underline-offset-4 group-hover/profile:underline group-focus-visible/profile:underline">GitHub Projects</h3>
+              </a>
               <div className="flex items-center gap-1">
                 <button 
                   onClick={prevProject}
