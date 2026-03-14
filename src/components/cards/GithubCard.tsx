@@ -37,16 +37,22 @@ export default function GithubCard() {
 
   // --- GitHub carousel state and navigation ---
   const [currentProject, setCurrentProject] = useState(0);
+  const [previousProject, setPreviousProject] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
 
   /** Advances the GitHub carousel to the next project (wraps around). */
   const nextProject = () => {
     if (projects.length === 0) return;
+    setPreviousProject(currentProject);
+    setSlideDirection('right');
     setCurrentProject((prev) => (prev + 1) % projects.length);
   };
   
   /** Moves the GitHub carousel to the previous project (wraps around). */
   const prevProject = () => {
     if (projects.length === 0) return;
+    setPreviousProject(currentProject);
+    setSlideDirection('left');
     setCurrentProject((prev) => (prev - 1 + projects.length) % projects.length);
   };
 
@@ -78,31 +84,76 @@ export default function GithubCard() {
               </div>
             </div>
 
-            {/* Project carousel */}
-            {projects.length > 0 ? (
-              <a 
-                href={projects[currentProject]?.url || "#"}
-                target="_blank"
-                rel="noopener noreferrer" 
-                className="block bg-gray-800/50 rounded-xl p-2 border border-gray-700 hover:bg-gray-700/60 hover:border-gray-500 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <h4 className="font-bold text-white text-base">{projects[currentProject]?.name}</h4>
-                    <p className="text-sm text-gray-300 mt-1">{projects[currentProject]?.desc}</p>
-                    <p className="text-xs text-gray-400 mt-2">{projects[currentProject]?.tags}</p>
-                  </div>
-                  <div className="flex items-center gap-1 text-gray-400">
-                    <span className="text-yellow-400">⭐</span>
-                    <span className="text-sm">{projects[currentProject]?.stars}</span>
-                  </div>
+            {/* Inject dynamic sliding animations for incoming and outgoing elements. */}
+            <style>{`
+              @keyframes slide-in-right {
+                from { transform: translateX(110%); }
+                to { transform: translateX(0); }
+              }
+              @keyframes slide-out-left {
+                from { transform: translateX(0); }
+                to { transform: translateX(-110%); }
+              }
+              @keyframes slide-in-left {
+                from { transform: translateX(-110%); }
+                to { transform: translateX(0); }
+              }
+              @keyframes slide-out-right {
+                from { transform: translateX(0); }
+                to { transform: translateX(110%); }
+              }
+
+              .animate-in-right { animation: slide-in-right 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+              .animate-out-left { animation: slide-out-left 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+              .animate-in-left { animation: slide-in-left 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+              .animate-out-right { animation: slide-out-right 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+            `}</style>
+
+            {/* Project carousel container. 
+                A single-cell CSS grid layout isolates elements, allowing them to overlap seamlessly during enter/exit animations. */}
+            <div className="relative w-full grid" style={{ gridTemplateColumns: '1fr' }}>
+              {projects.length > 0 ? (
+                projects.map((project, idx) => {
+                  
+                  // Filter out inactive projects immediately to keep the DOM clean
+                  if (idx !== currentProject && idx !== previousProject) return null;
+
+                  let animClass = '';
+                  
+                  if (idx === currentProject) {
+                    animClass = slideDirection === 'right' ? 'animate-in-right z-10' : 'animate-in-left z-10';
+                  } else if (idx === previousProject && currentProject !== previousProject) {
+                    animClass = slideDirection === 'right' ? 'animate-out-left z-0 pointer-events-none' : 'animate-out-right z-0 pointer-events-none';
+                  }
+
+                  return (
+                    <a 
+                      key={idx}
+                      href={project.url || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer" 
+                      className={`col-start-1 row-start-1 block bg-gray-800/50 rounded-xl p-2 border border-gray-700 hover:bg-gray-700/60 hover:border-gray-500 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30 ${animClass}`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <h4 className="font-bold text-white text-base">{project.name}</h4>
+                          <p className="text-sm text-gray-300 mt-1">{project.desc}</p>
+                          <p className="text-xs text-gray-400 mt-2">{project.tags}</p>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-400">
+                          <span className="text-yellow-400">⭐</span>
+                          <span className="text-sm">{project.stars}</span>
+                        </div>
+                      </div>
+                    </a>
+                  );
+                })
+              ) : (
+                <div className="col-start-1 row-start-1 block bg-gray-800/50 rounded-xl p-2 border border-gray-700 h-[88px] flex items-center justify-center">
+                  <span className="animate-pulse text-gray-500 text-xs">Loading...</span>
                 </div>
-              </a>
-            ) : (
-              <div className="block bg-gray-800/50 rounded-xl p-2 border border-gray-700 h-[88px] flex items-center justify-center">
-                <span className="animate-pulse text-gray-500 text-xs">Loading...</span>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Dots indicator */}
             <div className="flex items-center justify-center gap-1.5 mt-3">
