@@ -78,12 +78,20 @@ export default function UKitCard() {
         <div className="flex flex-col justify-center gap-3 h-full relative z-20 max-w-[55%]">
           
           <div className="flex flex-col items-start gap-1">
-            <img
-              src="/logoUKit.png"
-              alt="UKit"
-              className="h-11 desk:h-11 w-auto object-contain object-left"
-            />
-            <p className="text-[14px] desk:text-[14px] font-bold text-slate-700 leading-tight">
+            {/* Logo wrapped with the official website link */}
+            <a 
+              href="https://ukit-bordeaux.fr/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="transition-opacity hover:opacity-80 active:opacity-70"
+            >
+              <img
+                src="/logoUKit.png"
+                alt="UKit"
+                className="h-9 desk:h-11 w-auto object-contain object-left"
+              />
+            </a>
+            <p className="text-[12px] desk:text-[14px] font-bold text-slate-700 leading-tight">
               The survival kit for <br />
               <span className="text-[#5E5CE6]">Bordeaux students.</span>
             </p>
