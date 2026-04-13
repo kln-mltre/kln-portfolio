@@ -28,17 +28,17 @@ export default function UKitCard() {
               onHover: { enable: true, mode: ['grab', 'repulse'] },
             },
             modes: {
-              push: { quantity: 3 },
-              grab: { distance: 150, links: { opacity: 0.4 } },
-              repulse: { distance: 100, duration: 0.4, factor: 2, speed: 1 },
+              push: { quantity: 2 },
+              grab: { distance: 100, links: { opacity: 0.4 } },
+              repulse: { distance: 80, duration: 0.4, factor: 2, speed: 1 },
             },
           },
           particles: {
             color: { value: ['#007AFF', '#5E5CE6'] },
-            links: { color: '#5E5CE6', distance: 120, enable: true, opacity: 0.3, width: 1 },
-            move: { enable: true, speed: 1.2, direction: 'none', random: true, straight: false, outModes: { default: 'out' } },
-            number: { density: { enable: true, width: 1000 }, value: 80 },
-            opacity: { value: { min: 0.6, max: 0.9 } },
+            links: { color: '#5E5CE6', distance: 70, enable: true, opacity: 0.2, width: 1 },
+            move: { enable: true, speed: 0.7, direction: 'none', random: true, straight: false, outModes: { default: 'out' } },
+            number: { density: { enable: true, width: 400 }, value: 70, limit: { value: 120 } },
+            opacity: { value: { min: 0.4, max: 0.5 } },
             shape: {
               type: 'image',
               options: {
@@ -48,7 +48,7 @@ export default function UKitCard() {
                 ],
               },
             },
-            size: { value: { min: 2, max: 5 } },
+            size: { value: { min: 1, max: 3 } },
           },
           detectRetina: true,
         },
@@ -61,7 +61,7 @@ export default function UKitCard() {
   return (
     <div className="rounded-3xl border-2 border-[#2c3e50] bg-slate-50 min-h-[200px] desk:min-h-0 col-span-2 order-7 desk:order-none flex flex-col overflow-hidden shadow-lg relative">
 
-      {/* Particle field */}
+      {/* Particle field background (scaled down) */}
       <div
         id="ukit-card-particles"
         className="absolute inset-0 z-0"
@@ -71,42 +71,43 @@ export default function UKitCard() {
         }}
       />
 
-      {/* Main content container */}
-      <div className="flex-1 relative z-10 flex items-center p-8">
+      {/* Content container: restricted padding to stay within the grid row height */}
+      <div className="flex-1 relative z-10 flex items-center px-8 py-4 desk:px-8">
 
-        {/* Left Side: Logo, Badges and Credits */}
-        <div className="flex flex-col justify-between h-full relative z-20">
-          <div className="flex flex-col gap-5">
+        {/* Left: Identity & CTA */}
+        <div className="flex flex-col justify-center gap-3 h-full relative z-20 max-w-[55%]">
+          
+          <div className="flex flex-col items-start gap-1">
             <img
               src="/logoUKit.png"
               alt="UKit"
-              className="h-12 w-auto object-contain object-left"
+              className="h-11 desk:h-11 w-auto object-contain object-left"
             />
-            
-            {/* Download Badges properly linked */}
-            <div className="flex items-center gap-2">
-              <a
-                href="https://apps.apple.com/app/id1394708917"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-transform duration-200 active:scale-95"
-              >
-                <img src="/badge-app-store.svg" alt="App Store" className="h-8 desk:h-9 w-auto" />
-              </a>
-              <a
-                href="https://play.google.com/store/apps/details?id=com.bordeaux1.emplois"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-transform duration-200 active:scale-95"
-              >
-                <img src="/badge-google-play.svg" alt="Google Play" className="h-8 desk:h-9 w-auto" />
-              </a>
-            </div>
+            <p className="text-[14px] desk:text-[14px] font-bold text-slate-700 leading-tight">
+              The survival kit for <br />
+              <span className="text-[#5E5CE6]">Bordeaux students.</span>
+            </p>
           </div>
-
-          <span className="text-[10px] font-mono text-slate-400 tracking-widest uppercase">
-            Maintenu par <span className="text-[#5E5CE6] font-bold">KAE Lab</span>
-          </span>
+            
+          {/* Bigger store badges with direct links */}
+          <div className="flex items-center gap-2">
+            <a
+              href="https://apps.apple.com/app/id1394708917"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-transform duration-200 active:scale-95 origin-left"
+            >
+              <img src="/badge-app-store.svg" alt="App Store" className="h-8.5 desk:h-8.5 w-auto" />
+            </a>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.bordeaux1.emplois"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-transform duration-200 active:scale-95 origin-left"
+            >
+              <img src="/badge-google-play.svg" alt="Google Play" className="h-8.5 desk:h-8.5 w-auto" />
+            </a>
+          </div>
         </div>
 
 
