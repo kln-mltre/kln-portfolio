@@ -116,7 +116,7 @@ export default function InceptionCase() {
     <div className="relative min-h-[150px] desk:min-h-0 w-full h-full" data-inception-card>
       <div
         onClick={triggerDive}
-        className="absolute inset-0 cursor-pointer group overflow-hidden transition duration-200 ease-out rounded-3xl border-2 border-[#2c3e50] shadow-lg opacity-100"
+        className="absolute inset-0 cursor-pointer group overflow-hidden transition duration-200 ease-out rounded-3xl border-2 border-[#2c3e50] shadow-lg opacity-100 select-none"
         style={gridBg}
       >
         <img

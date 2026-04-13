@@ -88,10 +88,10 @@ export default function UKitCard() {
               <img
                 src="/logoUKit.png"
                 alt="UKit"
-                className="h-9 desk:h-11 w-auto object-contain object-left"
+                className="h-11 w-auto object-contain object-left"
               />
             </a>
-            <p className="text-[12px] desk:text-[14px] font-bold text-slate-700 leading-tight">
+            <p className="text-[14px] font-bold text-slate-700 leading-tight">
               The survival kit for <br />
               <span className="text-[#5E5CE6]">Bordeaux students.</span>
             </p>
@@ -105,7 +105,7 @@ export default function UKitCard() {
               rel="noopener noreferrer"
               className="transition-transform duration-200 active:scale-95 origin-left"
             >
-              <img src="/badge-app-store.svg" alt="App Store" className="h-8.5 desk:h-8.5 w-auto" />
+              <img src="/badge-app-store.svg" alt="App Store" className="h-8 w-auto" />
             </a>
             <a
               href="https://play.google.com/store/apps/details?id=com.bordeaux1.emplois"
@@ -113,14 +113,14 @@ export default function UKitCard() {
               rel="noopener noreferrer"
               className="transition-transform duration-200 active:scale-95 origin-left"
             >
-              <img src="/badge-google-play.svg" alt="Google Play" className="h-8.5 desk:h-8.5 w-auto" />
+              <img src="/badge-google-play.svg" alt="Google Play" className="h-8 w-auto" />
             </a>
           </div>
         </div>
 
 
         {/* Right Side: Phone Mockup */}
-        <div tabIndex={0} className="absolute top-46 -translate-y-1/2 right-10 w-[150px] z-10 group cursor-pointer focus:outline-none">
+        <div tabIndex={0} className="absolute top-47.5 -translate-y-1/2 right-10 w-[150px] desk:w-[156px] z-10 group cursor-pointer focus:outline-none">
           
           {/* Hardware Bezel */}
           <div className="relative w-full bg-slate-900 p-1 lg:p-1.25 shadow-2xl rounded-[1.25rem] lg:rounded-[1.5rem] transform transition-all group-hover:-translate-y-4 group-focus:-translate-y-4 duration-500">
