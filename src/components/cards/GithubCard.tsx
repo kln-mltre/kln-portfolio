@@ -59,7 +59,7 @@ export default function GithubCard() {
   return (
     <>
       {/* --- [G] GitHub projects banner carousel with navigation --- */}
-          <div className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-gray-900 to-gray-800 p-5 min-h-[150px] desk:min-h-0 col-span-2 order-5 desk:order-none hover:-translate-y-1 transition-transform overflow-hidden shadow-lg">
+          <div className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-gray-900 to-gray-800 p-5 min-h-[150px] desk:min-h-0 col-span-2 order-5 desk:order-none transition-transform overflow-hidden shadow-lg">
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
               <a
