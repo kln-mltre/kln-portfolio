@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@tsparticles/engine": "^3.9.1",
+    "@tsparticles/slim": "^3.9.1",
     "framer-motion": "^12.34.2",
     "lucide-react": "^0.575.0",
     "matter-js": "^0.20.0",

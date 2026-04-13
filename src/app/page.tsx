@@ -18,6 +18,7 @@ import BuildingCard from '@/components/cards/BuildingCard';
 
 import InceptionCase from '@/components/cards/InceptionCase';
 import FlipCard from '@/components/ui/FlipCard';
+import UKitCard from '@/components/cards/UKitCard';
 
 /**
  * Main portfolio page component.
@@ -174,7 +175,7 @@ export default function Home() {
             back={<KlipMachineCard />} 
           />
 
-          <BuildingCard />
+          <UKitCard />
 
           <NetPuzzleCard />
 
