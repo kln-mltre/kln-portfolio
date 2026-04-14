@@ -162,7 +162,7 @@ export default function Home() {
 
         {/* Bento grid: horizontal scroll (2-row) on mobile, 4-column dense layout on desktop */}
         <div 
-          className="flex-1 grid content-center desk:content-stretch grid-rows-[200px_200px] grid-flow-col desk:grid-rows-4 desk:grid-flow-dense desk:grid-cols-4 gap-4 mt-2 desk:mt-0 pb-6 desk:pb-0 overflow-x-auto desk:overflow-visible overflow-y-hidden snap-x auto-cols-[230px] desk:auto-cols-auto -mx-4 px-4 desk:mx-0 desk:px-0"
+          className="flex-1 grid content-center desk:content-stretch grid-rows-[190px_195px] grid-flow-col desk:grid-rows-4 desk:grid-flow-dense desk:grid-cols-4 gap-4 mt-2 desk:mt-0 pb-6 desk:pb-0 overflow-x-auto desk:overflow-visible overflow-y-hidden snap-x auto-cols-[250px] desk:auto-cols-auto -mx-4 px-4 desk:mx-0 desk:px-0"
         >
 
           <IdentityCard />

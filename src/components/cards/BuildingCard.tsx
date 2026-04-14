@@ -13,7 +13,7 @@ const Worker = ({ hat = '#f59e0b', body = '#ea580c' }: { hat?: string; body?: st
 
 export default function BuildingCard() {
   return (
-    <div className="rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-b from-[#1a1207] to-[#2a1a08] min-h-[200px] desk:min-h-0 col-span-2 order-7 desk:order-none flex flex-col overflow-hidden shadow-lg relative [container-type:inline-size]">
+    <div className="rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-b from-[#1a1207] to-[#2a1a08] desk:min-h-0 col-span-2 order-7 desk:order-none flex flex-col overflow-hidden shadow-lg relative [container-type:inline-size]">
 
       {/* Hazard tape top */}
       <div className="h-3 w-full flex-none overflow-hidden relative">

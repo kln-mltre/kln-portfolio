@@ -23,14 +23,14 @@ export default function NetPuzzleCard() {
             />
 
             {/* Game title (uses the custom pixel font) */}
-            <div className={`absolute top-3 desk:top-8 inset-x-0 z-10 flex flex-col items-center justify-center leading-none select-none pointer-events-none ${pixelFont.className}`}>
+            <div className={`absolute top-4 desk:top-8 inset-x-0 z-10 flex flex-col items-center justify-center leading-none select-none pointer-events-none ${pixelFont.className}`}>
               <a 
                 href="https://github.com/kln-mltre/net-a22" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="pointer-events-auto cursor-pointer hover:scale-110 origin-center"
               >
-                <h3 className="text-[34px] desk:text-[38px] text-[#ffffff] uppercase">
+                <h3 className="text-[38px] desk:text-[38px] text-[#ffffff] uppercase">
                   Net Puzzle
                 </h3>
               </a>
@@ -38,7 +38,7 @@ export default function NetPuzzleCard() {
 
             {/* Puzzle grid each cell is aspect-square for consistent tile alignment */}
             <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-full grid grid-cols-4 grid-rows-6 scale-120 translate-y-9 desk:scale-143 desk:translate-y-10 desk:row-scale-143" style={{ gap: 0 }}>
+                <div className="w-full grid grid-cols-4 grid-rows-6 scale-120 translate-y-20 desk:scale-143 desk:translate-y-10 desk:row-scale-143" style={{ gap: 0 }}>
                 
                 {/* Row 1 */}
                 <div className="relative aspect-square overflow-hidden"></div>

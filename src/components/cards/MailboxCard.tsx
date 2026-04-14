@@ -74,7 +74,7 @@ export default function MailboxCard() {
             <div className="pt-2 pb-4 flex flex-col items-center justify-center relative z-10">
                 <Mail className="mb-2 text-red-500" size={26} />
                 <p className="text-[17px] mt-[-4px] font-bold text-gray-800 leading-tight">Contact</p>
-                <p className="text-[14px] desk:text-[15px] font-semibold text-gray-600 mt-1">kylian.malartre@gmail.com</p>
+                <p className="text-[15px] desk:text-[15px] font-semibold text-gray-600 mt-1">kylian.malartre@gmail.com</p>
             </div>
             </div>
         </div>

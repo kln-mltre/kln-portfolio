@@ -59,7 +59,7 @@ export default function UKitCard() {
   }, []);
 
   return (
-    <div className="rounded-3xl border-2 border-[#2c3e50] bg-slate-50 min-h-[200px] desk:min-h-0 col-span-2 order-7 desk:order-none flex flex-col overflow-hidden shadow-lg relative">
+    <div className="rounded-3xl border-2 border-[#2c3e50] bg-slate-50 col-span-2 order-7 desk:order-none flex flex-col overflow-hidden shadow-lg relative select-none">
 
       {/* Particle field background (scaled down) */}
       <div
@@ -120,7 +120,7 @@ export default function UKitCard() {
 
 
         {/* Right Side: Phone Mockup */}
-        <div tabIndex={0} className="absolute top-47.5 -translate-y-1/2 right-10 w-[150px] desk:w-[156px] z-10 group cursor-pointer focus:outline-none">
+        <div tabIndex={0} className="absolute top-47.5 -translate-y-1/2 right-10 w-[156px] desk:w-[156px] z-10 group cursor-pointer focus:outline-none">
           
           {/* Hardware Bezel */}
           <div className="relative w-full bg-slate-900 p-1 lg:p-1.25 shadow-2xl rounded-[1.25rem] lg:rounded-[1.5rem] transform transition-all group-hover:-translate-y-4 group-focus:-translate-y-4 duration-500">
