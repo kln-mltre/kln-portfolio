@@ -5,7 +5,7 @@ export default function KlipSchedulerCard() {
   return (
     <>
       {/* --- [C] KlipScheduler card TikTok automation pipeline visualization --- */}
-          <div tabIndex={0} className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pl-3 pr-4 pt-2.5 pb-4 desk:min-h-0 col-span-2 order-4 desk:order-none flex flex-col overflow-hidden shadow-lg relative cursor-pointer focus:outline-none">
+          <div tabIndex={0} className="group rounded-3xl border-2 border-[#2c3e50] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pl-3 pr-4 pt-2.5 pb-4 col-span-2 flex flex-col overflow-hidden shadow-lg relative cursor-pointer focus:outline-none">
             {/* Header */}
             <div className="flex items-center gap-2 mb-0 pt-3 pl-2 pr-2 flex-none">
               <a 

@@ -160,7 +160,7 @@ export default function TerminalCard() {
   return (
     <>
       {/* --- [I] Terminal card live system info with CRT scanline effect --- */}
-          <div tabIndex={0} className="group relative rounded-3xl border-2 border-[#2c3e50] bg-[#121212] p-4 min-h-[150px] desk:min-h-0 flex flex-col overflow-hidden shadow-inner font-mono text-[10px] order-3 desk:order-none focus:outline-none cursor-pointer">
+          <div tabIndex={0} className="group relative rounded-3xl border-2 border-[#2c3e50] bg-[#121212] p-4 min-h-[150px] flex flex-col overflow-hidden shadow-inner font-mono text-[10px] focus:outline-none cursor-pointer order-3 desk:order-none">
             
             {/* Scanline Effect */}
             <div className="absolute inset-0 pointer-events-none z-20 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_2px,3px_100%] opacity-50" />
