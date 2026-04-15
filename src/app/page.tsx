@@ -48,8 +48,8 @@ export default function Home() {
       if (isDesktop) {
         // Constrains the canvas to fit within the viewport without clipping
         // using the smallest scale factor between width and height.
-        const scaleX = w / 1050;
-        const scaleY = (h - 50) / 860;
+        const scaleX = w / 1100;
+        const scaleY = (h - 100) / 860;
         setPageScale(Math.min(scaleX, scaleY) * manualZoom);
       } else {
         // Forces the canvas to scale based on width only,
@@ -72,7 +72,7 @@ export default function Home() {
 
   return (
     <main 
-      className="relative h-[100dvh] w-full flex overflow-auto bg-[#fdf6e3] text-[#2c3e50] font-sans [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] select-none"
+      className="relative h-[100dvh] w-full flex overflow-y-auto overflow-x-hidden bg-[#fdf6e3] text-[#2c3e50] font-sans [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] select-none"
       style={{
         backgroundImage: `
           linear-gradient(rgba(44, 62, 80, 0.06) 1px, transparent 1px),
@@ -143,7 +143,7 @@ export default function Home() {
               href="https://github.com/KAE-Lab" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="group absolute top-[-17px] desk:top-[-25px] right-0 transition-transform duration-300 hover:scale-110 outline-none origin-center"
+              className="group absolute top-[-17px] desk:top-[-22px] right-[-13px] desk:right-[-14px] transition-transform duration-300 hover:scale-110 outline-none origin-center"
             >
               <span className="hidden desk:block absolute right-full top-1/2 -translate-y-1/2 mr-3 px-2.5 py-1 rounded-lg bg-white/10 backdrop-blur-xl border border-white/25 shadow-[0_2px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] text-[#2c3e50] text-[13px] font-mono font-bold uppercase tracking-wider whitespace-nowrap opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 pointer-events-none">
                 KAE Lab
@@ -151,7 +151,7 @@ export default function Home() {
               <img 
                 src="/logo-kae-lab.png" 
                 alt="KAE-Lab Logo" 
-                className="h-25 desk:h-30 w-auto object-contain opacity-95"
+                className="h-25 desk:h-27 w-auto object-contain opacity-95"
               />
             </a>
           </header>

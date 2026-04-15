@@ -37,8 +37,8 @@ export default function UKitCard() {
             color: { value: ['#007AFF', '#5E5CE6'] },
             links: { color: '#5E5CE6', distance: 70, enable: true, opacity: 0.2, width: 1 },
             move: { enable: true, speed: 0.7, direction: 'none', random: true, straight: false, outModes: { default: 'out' } },
-            number: { density: { enable: true, width: 400 }, value: 70, limit: { value: 120 } },
-            opacity: { value: { min: 0.4, max: 0.5 } },
+            number: { density: { enable: true, width: 400 }, value: 120, limit: { value: 120 } },
+            opacity: { value: { min: 0.7, max: 0.7 } },
             shape: {
               type: 'image',
               options: {
