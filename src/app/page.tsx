@@ -153,7 +153,7 @@ export default function Home() {
 
             {/* Detaches the logo from the document flow to prevent shifting the grid's vertical alignment */}
             <a
-              href="https://github.com/KAE-Lab" 
+              href="https://kaelab.dev" 
               target="_blank" 
               rel="noopener noreferrer"
               className="group absolute top-[-17px] desk:top-[-22px] right-[-13px] desk:right-[-14px] transition-transform duration-300 hover:scale-110 outline-none origin-center"
