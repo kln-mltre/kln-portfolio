@@ -71,19 +71,22 @@ export default function Home() {
   const scaledH = currentH * pageScale;
 
   return (
-    <main 
-      className="relative h-[100dvh] w-full flex overflow-y-auto overflow-x-hidden bg-[#fdf6e3] text-[#2c3e50] font-sans [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] select-none"
-      style={{
-        backgroundImage: `
-          linear-gradient(rgba(44, 62, 80, 0.06) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(44, 62, 80, 0.06) 1px, transparent 1px),
-          linear-gradient(rgba(44, 62, 80, 0.025) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(44, 62, 80, 0.025) 1px, transparent 1px)
-        `,
-        backgroundSize: '50px 50px, 50px 50px, 10px 10px, 10px 10px',
-        backgroundPosition: '-1px -1px, -1px -1px, -1px -1px, -1px -1px'
-      }}
-    >
+    <main className="relative h-[100dvh] w-full bg-[#fdf6e3] text-[#2c3e50] font-sans overflow-hidden select-none">
+      
+      <div 
+        className="absolute -top-[50vh] -bottom-[50vh] left-0 right-0 pointer-events-none z-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(44, 62, 80, 0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(44, 62, 80, 0.06) 1px, transparent 1px),
+            linear-gradient(rgba(44, 62, 80, 0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(44, 62, 80, 0.025) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px, 50px 50px, 10px 10px, 10px 10px',
+          backgroundPosition: '-1px -1px, -1px -1px, -1px -1px, -1px -1px'
+        }}
+      />
+
       <div 
         className={`fixed inset-0 z-[99999] bg-[#fdf6e3] flex-col items-center justify-center text-[#2c3e50] p-8 text-center ${isRestricted ? 'flex' : 'hidden'}`}
       >
@@ -101,6 +104,16 @@ export default function Home() {
           [ ERR: Viewport too small. This site is not available for iPhone 4 users <br/> or anyone living in 480px of height. Modern problems require modern displays. ]
         </p>
       </div>
+
+      <div 
+        className="absolute inset-0 w-full h-full flex flex-col overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] z-10"
+        style={{
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 7px, black calc(100% - 7px), transparent 100%)',
+          maskImage: 'linear-gradient(to bottom, transparent 0%, black 7px, black calc(100% - 7px), transparent 100%)'
+        }}
+      >
       
       {/* Ghost Wrapper
         Reserves the exact scaled dimensions in the document flow.
@@ -177,6 +190,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+    </div>
     </main>
   );
 }
