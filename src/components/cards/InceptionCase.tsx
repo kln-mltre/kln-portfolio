@@ -55,13 +55,13 @@ export default function InceptionCase() {
         }
 
         ::view-transition-old(root) {
-          animation: dive-out 1.35s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+          animation: dive-out 1.35s cubic-bezier(0.76, 0, 0.24, 1) forwards;
           transform-origin: ${originX}px ${originY}px;
           z-index: 1;
         }
 
         ::view-transition-new(root) {
-          animation: dive-in 1.35s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+          animation: dive-in 1.35s cubic-bezier(0.76, 0, 0.24, 1) forwards;
           z-index: 2;
         }
 
@@ -69,10 +69,19 @@ export default function InceptionCase() {
           0% {
             transform: scale(1);
             opacity: 1;
+            filter: blur(0px);
+          }
+          40% {
+            opacity: 1; 
+          }
+          70% {
+            opacity: 0;
+            filter: blur(10px);
           }
           100% {
             transform: scale(${zoomFactor});
             opacity: 0;
+            filter: blur(10px); 
           }
         }
 
@@ -98,7 +107,7 @@ export default function InceptionCase() {
         styleEl.remove();
         setIsPreDive(false);
       }
-    }, 500);
+    }, 10);
   };
 
   const gridBg = {
