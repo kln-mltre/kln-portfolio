@@ -68,6 +68,7 @@ export default function UKitCard() {
         style={{
           WebkitMaskImage: 'linear-gradient(to bottom, black 60%, rgba(0,0,0,0.5) 100%)',
           maskImage: 'linear-gradient(to bottom, black 60%, rgba(0,0,0,0.5) 100%)',
+          transform: 'translateZ(0)'
         }}
       />
 
