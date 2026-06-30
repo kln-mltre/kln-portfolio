@@ -19,7 +19,7 @@ export default function NetPuzzleCard() {
               src="/BACKGROUND.png"
               alt=""
               className="absolute inset-0 w-full h-full object-cover"
-              style={{ imageRendering: 'pixelated' }}
+              style={{ imageRendering: 'pixelated', transform: 'translateZ(0)' }}
             />
 
             {/* Game title (uses the custom pixel font) */}
