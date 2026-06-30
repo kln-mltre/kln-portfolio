@@ -31,6 +31,12 @@ export const metadata: Metadata = {
   title: 'Kylian Malartre | Full-stack Explorer',
   description: 'Interactive portfolio of Kylian Malartre, Computer Science student at UBx.',
   
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+
   other: {
     google: "notranslate",
   },
@@ -99,6 +105,12 @@ export default function RootLayout({
 
   return (
     <html lang="en" translate='no'>
+      <head>
+        {/* Google Fonts for MargauxCard (Outfit + Lora) */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased notranslate`}
       >

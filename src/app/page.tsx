@@ -13,6 +13,7 @@ import NetPuzzleCard from '@/components/cards/NetPuzzleCard';
 import TerminalCard from '@/components/cards/TerminalCard';
 import GithubCard from '@/components/cards/GithubCard';
 import ValentineCard from '@/components/cards/ValentineCard';
+import MargauxCard from '@/components/cards/MargauxCard';
 import BuildingCard from '@/components/cards/BuildingCard';
 
 import InceptionCase from '@/components/cards/InceptionCase';
@@ -185,7 +186,11 @@ export default function Home() {
             <NetPuzzleCard />
             <TerminalCard />
             <GithubCard />
-            <ValentineCard />
+            <FlipCard 
+              className="row-span-1 col-span-2 order-6 desk:order-none"
+              front={<ValentineCard />}
+              back={<MargauxCard />}
+            />
             <InceptionCase />
           </div>
         </div>

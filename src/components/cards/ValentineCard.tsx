@@ -106,7 +106,7 @@ export default function ValentineCard() {
   return (
     <>
       {/* --- [H] Storytelling card Valentine letter with envelope and QR seal --- */}
-          <div className="group rounded-3xl border-2 border-[#2c3e50] col-span-2 flex flex-col relative shadow-sm z-10 hover:z-50 order-6 desk:order-none">
+          <div className="group rounded-3xl border-2 border-[#2c3e50] w-full h-full flex flex-col relative shadow-sm z-10 hover:z-50">
             
             {/* Background container: clips the texture and stickers within the card bounds */}
             <div className="absolute inset-0 rounded-[22px] overflow-hidden pointer-events-none -z-10" style={cardBackgroundStyle}>
