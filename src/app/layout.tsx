@@ -28,6 +28,7 @@ const geistMono = Geist_Mono({
 
 // Page-level SEO metadata including Open Graph, Twitter card, canonical URL, and crawler directives.
 export const metadata: Metadata = {
+  metadataBase: new URL('https://kylianmalartre.com'),
   title: 'Kylian Malartre | Full-stack Explorer',
   description: 'Interactive portfolio of Kylian Malartre, Computer Science student at UBx.',
   
