@@ -2,6 +2,20 @@
 
 import React from 'react';
 
+function PhotoItem({ src }: { src: string }) {
+  return (
+    <div className="group/img relative block overflow-hidden rounded-[5px] shadow-[0_3px_10px_rgba(0,0,0,0.15)] pointer-events-auto cursor-pointer">
+      <img 
+        src={src} 
+        alt="" 
+        className="w-full h-auto block" 
+        style={{ transform: 'translateZ(0)', imageRendering: '-webkit-optimize-contrast' as any }}
+      />
+      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 z-10 pointer-events-none" />
+    </div>
+  );
+}
+
 export default function MargauxCard() {
   return (
     <div
@@ -68,33 +82,33 @@ export default function MargauxCard() {
 
           {/* Col 0 (Far left) */}
           <div className="flex flex-col gap-2 w-[70px] mb-[30px]">
-            <img src="/margaux/IMG_1834-thumb.webp" alt="" className="w-full h-auto rounded-[5px] shadow-[0_3px_10px_rgba(0,0,0,0.15)]" />
+            <PhotoItem src="/margaux/IMG_1834-thumb.webp" />
           </div>
 
           {/* Col 1 */}
           <div className="flex flex-col gap-2 w-[70px] mb-[0px]">
-            <img src="/margaux/IMG_2174-thumb.webp" alt="" className="w-full h-auto rounded-[5px] shadow-[0_3px_10px_rgba(0,0,0,0.15)]" />
-            <img src="/margaux/IMG_1918-thumb.webp" alt="" className="w-full h-auto rounded-[5px] shadow-[0_3px_10px_rgba(0,0,0,0.15)]" />
+            <PhotoItem src="/margaux/IMG_2174-thumb.webp" />
+            <PhotoItem src="/margaux/IMG_1918-thumb.webp" />
           </div>
 
           {/* Col 2 */}
           <div className="flex flex-col gap-2 w-[90px] mb-[0px]">
-            <img src="/margaux/IMG_1931-thumb.webp" alt="" className="w-full h-auto rounded-[5px] shadow-[0_3px_10px_rgba(0,0,0,0.15)]" />
-            <img src="/margaux/IMG_2155-thumb.webp" alt="" className="w-full h-auto rounded-[5px] shadow-[0_3px_10px_rgba(0,0,0,0.15)]" />
+            <PhotoItem src="/margaux/IMG_1931-thumb.webp" />
+            <PhotoItem src="/margaux/IMG_2155-thumb.webp" />
           </div>
 
           {/* Col 3 */}
           <div className="flex flex-col gap-2 w-[90px] mb-[-110px]">
-            <img src="/margaux/IMG_9596-thumb.webp" alt="" className="w-full h-auto rounded-[5px] shadow-[0_3px_10px_rgba(0,0,0,0.15)]" />
-            <img src="/margaux/IMG_1936-thumb.webp" alt="" className="w-full h-auto rounded-[5px] shadow-[0_3px_10px_rgba(0,0,0,0.15)]" />
-            <img src="/margaux/IMG_9541-thumb.webp" alt="" className="w-full h-auto rounded-[5px] shadow-[0_3px_10px_rgba(0,0,0,0.15)]" />
+            <PhotoItem src="/margaux/IMG_9596-thumb.webp" />
+            <PhotoItem src="/margaux/IMG_1936-thumb.webp" />
+            <PhotoItem src="/margaux/IMG_9541-thumb.webp" />
           </div>
 
         </div>
 
         {/* Separator Line */}
         <div className="absolute left-[20px] bottom-[70px] z-10 pointer-events-none">
-          <div className="h-[3px] w-[80px] bg-[#0f172a] rounded-full opacity-40" />
+          <div className="h-[2px] w-[170px] bg-[#0f172a] rounded-full opacity-50" />
         </div>
 
         {/* Bottom Section */}
