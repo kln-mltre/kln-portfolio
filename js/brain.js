@@ -14,7 +14,7 @@ const APPLIES = {
   design: [0, 1, 2, 3], writing: [0, 1, 2, 3], documentation: [0, 1, 2, 3], tests: [0, 1, 2, 3], TypeScript: [0, 1, 2, 3],
   'React Native': [1], 'Next.js': [0, 2, 3], SQL: [0], Python: [],
 };
-const NOTES = 112;
+const NOTES = 108;
 const NOTES_PER_PROJECT = 24;
 // The furthest a mark sits from the centre, in graph radii.
 const EXTENT = 1.26;
