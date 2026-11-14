@@ -114,7 +114,3 @@
   .cover__proofs { grid-column: 10 / span 3; margin: 0; }
   .cover__proofs .row { padding: 11px 0 13px; font-size: 22px; }
 }
-
-/* LABO nom: ?nom=creux shows the name drawn in one line (Ouverte), to compare with the engraved
-   one. Goes once the choice is confirmed, with the Ouverte style if it is not kept. */
-.nom-creux .cover__name { font-family: var(--serif-open); }

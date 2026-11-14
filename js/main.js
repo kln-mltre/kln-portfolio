@@ -17,8 +17,6 @@ if (capture) {
   // A capture cannot wait for an image to scroll into view.
   document.querySelectorAll('img[loading="lazy"]').forEach((img) => { img.loading = 'eager'; });
 }
-// LABO nom: ?nom=creux shows the name of the cover drawn in one line (css/cover.css).
-if (params.get('nom') === 'creux') root.classList.add('nom-creux');
 // A reload must not open halfway down the page.
 if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
 

@@ -1,6 +1,5 @@
 /* Tokens, type, and the pieces every section shares. */
 @font-face { font-family: 'Malartre Gravee'; src: url('../fonts/Malartre-Gravee.woff2') format('woff2'); font-display: swap; }
-@font-face { font-family: 'Malartre Ouverte'; src: url('../fonts/Malartre-Ouverte.woff2') format('woff2'); font-display: swap; }
 @font-face { font-family: 'Malartre Fine'; src: url('../fonts/Malartre-Fine.woff2') format('woff2'); font-display: swap; }
 
 :root {
@@ -11,7 +10,6 @@
   --red: #d21b10;
   --serif: 'Malartre Gravee', Georgia, serif;
   --serif-long: 'Malartre Fine', Georgia, serif;
-  --serif-open: 'Malartre Ouverte', Georgia, serif;
   --sans: 'Instrument Sans', Helvetica, Arial, sans-serif;
   --pad: 20px;
   --gap: 20px;
