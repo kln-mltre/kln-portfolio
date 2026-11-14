@@ -1,0 +1,154 @@
+/* The typographic pages: the numbers, services, about, and the back cover. */
+
+/* --- Numbers: one figure on reels, like the frame counter of a camera, then three smaller
+   ones set on the lines of the grid. */
+.count { padding-bottom: 90px; }
+.count__grid { margin-top: 30px; }
+.count__figure {
+  position: relative;
+  display: inline-block;
+  font-size: 40.8vw;
+  white-space: nowrap;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.count__digits { display: inline-flex; align-items: flex-start; }
+.reel { display: inline-block; height: 0.9em; overflow: hidden; }
+.reel__strip { display: block; transform: translateY(calc(var(--roll, 0) * -0.9em)); will-change: transform; }
+.reel__strip i { display: block; height: 0.9em; font-style: normal; }
+.count__figure sup { display: inline-block; font-size: 0.42em; line-height: 1; vertical-align: top; margin-top: 0.14em; color: var(--red); opacity: var(--plus, 1); }
+/* The comma of the figure hangs under its line by a tenth of the figure's size: the text keeps clear of it. */
+.count__text { margin-top: max(20px, 5.5vw); max-width: 28ch; padding-left: 1.6em; text-indent: -1.6em; font-size: 21px; line-height: 1.25; }
+
+/* Three smaller figures, each a step further in and a size smaller than the one before. */
+.tally { margin-top: 64px; }
+.tally li { width: 62%; padding-top: 10px; border-top: 1px solid rgba(244, 241, 234, 0.3); }
+.tally li + li { margin-top: 34px; }
+.tally li:nth-child(2) { margin-left: 19%; }
+.tally li:nth-child(3) { margin-left: 38%; }
+.tally__figure { display: block; font-size: 29.5vw; font-variant-numeric: lining-nums tabular-nums; }
+.tally li:nth-child(2) .tally__figure { font-size: 22.7vw; }
+.tally li:nth-child(3) .tally__figure { font-size: 17vw; }
+.tally__text { display: block; margin-top: 10px; font-size: 16px; line-height: 1.3; color: var(--mute); }
+
+/* --- Services: three lines, each a step further in than the one before; its rule starts where
+   its name does and runs to the right edge. */
+.services { padding-bottom: 90px; }
+.services__list { margin-top: 30px; }
+.services__list li:nth-child(2) { margin-left: 18%; }
+.service {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 16px;
+  row-gap: 6px;
+  border-top: 1px solid var(--paper);
+  padding: 16px 0 26px;
+}
+.service__name { justify-self: start; font-size: 26px; line-height: 1.1; letter-spacing: -0.01em; transition: transform 0.5s var(--out); }
+.service__note { grid-column: 1; padding-left: 1.4em; text-indent: -1.4em; font-size: 16px; color: var(--mute); transition: color 0.3s ease; }
+.service__arrow { grid-column: 2; grid-row: 1; font-size: 28px; transition: transform 0.5s var(--out); }
+@media (hover: hover) and (pointer: fine) {
+  .service:hover .service__name { transform: translateX(14px); }
+  .service:hover .service__note { color: var(--paper); }
+  .service:hover .service__arrow { transform: translateX(8px); }
+}
+.services__more { display: flex; justify-content: space-between; gap: 16px; margin-top: 22px; font-size: 16px; color: var(--mute); }
+.services__more a { color: var(--paper); white-space: nowrap; }
+
+/* --- About and contact, as one closing spread: one sentence set large, then the raised hand
+   under its flash, two notes, and the way to write. The flash fires once, then the colour
+   spreads from the lit hand. */
+@property --r { syntax: '<number>'; inherits: true; initial-value: -24; }
+.about { position: relative; padding-bottom: 26px; }
+/* Its measure is set in ems, so that the sentence breaks at the same words from a phone to a tablet. */
+.about__lead { margin-top: 34px; max-width: 7.1em; padding-left: 0.9em; text-indent: -0.9em; font-size: 12.7vw; line-height: 0.94; }
+.about__grid { margin-top: 44px; }
+.shot { position: relative; width: 82%; margin-left: auto; --r: -24; transition: --r 2.4s cubic-bezier(0.3, 0, 0.15, 1) 0.2s; }
+.shot.is-lit { --r: 150; }
+.shot__frame { position: relative; overflow: hidden; }
+.shot__frame img { width: 100%; height: auto; transform: scale(calc(1.12 - var(--p, 1) * 0.12)); will-change: transform; }
+.shot__colour {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: radial-gradient(circle at 70% 45%, #000 calc(var(--r) * 1%), transparent calc(var(--r) * 1% + 24%));
+  mask-image: radial-gradient(circle at 70% 45%, #000 calc(var(--r) * 1%), transparent calc(var(--r) * 1% + 24%));
+}
+.shot__flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at 70% 45%, #fff 0%, rgba(255, 255, 255, 0.9) 16%, rgba(255, 255, 255, 0) 64%);
+}
+.shot.is-lit .shot__flash { animation: flash 0.75s ease-out both; }
+@keyframes flash { 0% { opacity: 0; } 9% { opacity: 1; } 100% { opacity: 0; } }
+/* The photograph's sheet: where, and under what light. */
+.shot__facts { margin-top: 2px; font-size: 13px; }
+.shot__facts > div:first-child { border-top: 0; }
+
+.about__notes { margin-top: 34px; }
+.about__notes p { max-width: 34ch; font-size: 19px; line-height: 1.3; }
+.about__notes p { padding-left: 1.4em; text-indent: -1.4em; }
+.about__notes p + p { margin: 22px 0 0 14%; color: var(--mute); }
+.call { margin-top: 54px; }
+.call__title { font-size: 30vw; white-space: nowrap; }
+.call__lead { margin-top: 20px; max-width: 24ch; font-size: 21px; line-height: 1.25; }
+.call__cta { margin-top: 22px; padding: 12px 22px 14px; font-size: 22px; }
+.call__links { margin: 38px 0 0 12%; }
+.about__foot { margin-top: 44px; }
+.about__legal { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; font-size: 14px; color: var(--mute); }
+
+@media (min-width: 900px) {
+  .count { padding-bottom: 190px; }
+  .count__grid { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); margin-top: 44px; }
+  /* The large figure runs off the left edge by the width of its first stroke. */
+  .count__figure { grid-column: 1 / span 9; justify-self: start; margin-left: -1.4vw; font-size: 30.6vw; }
+  .count__text { grid-column: 9 / span 4; align-self: start; margin: 4.4vw 0 0; font-size: 26px; line-height: 1.2; }
+  .tally { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); margin-top: 60px; align-items: start; }
+  .tally li, .tally li + li { width: auto; margin: 0; padding-top: 12px; }
+  .tally li:nth-child(1) { grid-column: 2 / span 4; }
+  .tally li:nth-child(2) { grid-column: 7 / span 3; margin-top: 150px; }
+  .tally li:nth-child(3) { grid-column: 10 / span 3; margin-top: 46px; }
+  .tally__figure { font-size: 15.3vw; }
+  .tally li:nth-child(2) .tally__figure { font-size: 10.2vw; }
+  .tally li:nth-child(3) .tally__figure { font-size: 6.8vw; }
+  .tally__text { margin-top: 14px; max-width: 24ch; padding-left: 1.4em; text-indent: -1.4em; font-size: 19px; }
+
+  .services { padding-bottom: 170px; }
+  .services__list { margin-top: 54px; }
+  .services__list li:nth-child(2) { margin-left: calc(3 * var(--step)); }
+  .service { grid-template-columns: 1fr auto; align-items: baseline; padding: 22px 0 56px; }
+  .service__name { font-size: 66px; letter-spacing: -0.02em; }
+  .service__note { margin-left: var(--step); font-size: 19px; }
+  .service__arrow { font-size: 44px; }
+  .services__more { margin-top: 30px; font-size: 19px; }
+
+  .about { padding-bottom: 34px; }
+  .about__lead { margin-top: 54px; max-width: 94%; padding-left: 1.2em; text-indent: -1.2em; font-size: 7.9vw; line-height: 0.92; }
+  /* The photograph a step in from the left, its sheet a step further; the notes on the nav's
+     line and on the contact's, the second lower; the call a step left of the notes, large; the
+     links two steps in from it. */
+  .about__grid { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); margin-top: 90px; align-items: start; }
+  .shot { grid-column: 2 / span 4; width: auto; margin: 0; }
+  .shot figcaption { margin-left: var(--step); }
+  .shot__facts { font-size: 14px; }
+  .about__main { grid-column: 6 / span 7; }
+  .about__notes { display: grid; grid-template-columns: repeat(7, 1fr); column-gap: var(--gap); margin: 0; }
+  .about__notes p { grid-column: 2 / span 3; font-size: 21px; }
+  .about__notes p + p { grid-column: 5 / span 3; margin: 84px 0 0; }
+  .call { margin-top: 70px; }
+  .call__title { font-size: 15.4vw; }
+  .call__lead { margin: 26px 0 0 var(--step); font-size: 30px; line-height: 1.18; }
+  .call__cta { margin: 28px 0 0 var(--step); padding: 12px 28px 15px; font-size: 30px; }
+  .call__links { margin: 60px 0 0 calc(3 * var(--step)); }
+  .call__links .row { font-size: 26px; }
+  .about__foot { margin-top: 90px; }
+  .about__legal { font-size: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shot { transition: none; }
+  .shot.is-lit .shot__flash { animation: none; }
+  .service__name, .service__note, .service__arrow { transition: none; }
+}
+.is-shot .shot { transition: none; }
+.is-shot .shot.is-lit .shot__flash { animation: none; }

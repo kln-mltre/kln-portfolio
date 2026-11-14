@@ -1,0 +1,195 @@
+/* The pinned acts: UKit, TLPerf and KLNOS. Each holds the screen while the scroll runs through
+   it: a giant title behind, cut by the frame; an object in front of it; and the words, set on
+   the four lines the bar gives the page (name, a step in, nav, contact) but never as one block:
+   each piece starts on a different line, at a different height. In the two work acts the piece
+   of screen a sentence is about lifts off the glass and the finder locks on it (js/finder.js). */
+.acts { position: relative; isolation: isolate; }
+
+/* The canvases stay put while their acts scroll by. Their wrappers span the acts without
+   taking room in the flow. */
+.stage-wrap, .brain-wrap { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.stage-pin, .brain { position: sticky; top: 0; display: block; width: 100%; height: 100svh; }
+.stage, .finder { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.act { position: relative; height: 380svh; }
+.act--brain { height: 480svh; }
+
+/* Two pinned layers per act, one behind the object and one in front of it. */
+.act__back, .act__front { position: sticky; top: 0; height: 100svh; }
+/* The end of a pin, softened (js/acts.js): around the moment the page takes the pinned pieces,
+   they are carried a little ahead of it, so they do not go from still to full speed at once.
+   The title moves inside its frame, which stays put: a title cut by the bottom of the screen
+   shows more of itself, not the edge that cuts it. */
+.acts.is-live :is(.act__title, .act__front, .brain) { translate: 0 calc(var(--release, 0) * -1px); }
+.acts.is-live .stage-pin { translate: 0 calc(var(--release-all, 0) * -1px); }
+.act__back { z-index: 1; overflow: hidden; }
+.act__front { z-index: 3; margin-top: -100svh; pointer-events: none; }
+.act__front a { pointer-events: auto; }
+
+.act__title {
+  position: absolute;
+  top: 12svh;
+  left: 50%;
+  font-size: var(--title, 40vw);
+  line-height: 0.86;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  opacity: calc(0.2 + var(--lit, 1) * 0.8);
+}
+.act--phone { --title: 46vw; }
+.act--laptop { --title: 33vw; }
+.act--brain { --title: 30vw; }
+/* The plate is made of hairlines: its title steps further back than the others. */
+.act--brain .act__title { opacity: calc(0.06 + var(--lit, 1) * 0.5); }
+
+/* On a narrow screen the object runs under the words: it sinks into the dark behind them, as
+   the body does on the cover. */
+.act__front::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgba(11, 11, 10, 0) 0%, rgba(11, 11, 10, 0.93) 32%, var(--night) 50%);
+}
+
+/* The shot, read out under the words: lens, distance, turn. */
+.act__data { margin-top: 10px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.act__col {
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: 18px;
+  opacity: var(--show, 1);
+  transform: translateY(calc((1 - var(--show, 1)) * 18px));
+}
+
+/* Chapters share one place: the one being read is shown, and changes as the camera moves on. */
+.chapters { display: grid; align-items: end; }
+.chapter { grid-area: 1 / 1; opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.6s var(--out); }
+.chapter.is-on { opacity: 1; transform: none; }
+.chapter h3 { font: inherit; font-size: 15px; line-height: 1.2; color: var(--mute); font-variant-numeric: tabular-nums; }
+.chapter p { margin-top: 3px; max-width: 34ch; font-size: 16px; line-height: 1.3; color: var(--mute); }
+/* A standfirst hangs from its first line: the lines after it are set in. */
+.chapter--lead p { margin: 0; max-width: 27ch; padding-left: 1.6em; text-indent: -1.6em; font-size: 20px; line-height: 1.22; color: var(--paper); }
+/* The sentence about the piece of screen the finder is on. On a narrow screen only the first
+   sentence of a chapter is kept. */
+.chapter .callout { margin-top: 6px; max-width: 24ch; padding-left: 1.4em; text-indent: -1.4em; font-size: 21px; line-height: 1.18; color: var(--paper); }
+.callout--more { display: none; }
+/* The plate's chapters are headed by a figure, set large. */
+.act--brain .chapter h3 { font-size: 23px; line-height: 1.15; color: var(--paper); }
+/* What the system means for whoever hires him: said once, under its standfirst. */
+.chapter .chapter__gain { margin-top: 10px; max-width: 34ch; padding-left: 1.4em; text-indent: -1.4em; font-size: 16px; line-height: 1.3; color: var(--mute); }
+/* The facts of an act, as a small sheet of two columns: label over value. */
+.chapter--facts .facts { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; }
+.chapter--facts .facts > div { display: block; padding: 7px 0 8px; }
+.chapter--facts .facts > div:nth-child(-n + 2) { border-top: 0; padding-top: 0; }
+.chapter--facts .facts dt { font-size: 12.5px; }
+
+/* How far through the act the scroll is: a rule that fills. */
+.act__progress { position: relative; height: 1px; margin-top: 16px; background: rgba(244, 241, 234, 0.28); }
+.act__progress::after { content: ''; position: absolute; inset: 0; background: var(--paper); transform: scaleX(var(--t, 0)); transform-origin: left; }
+.act__col .row { border-top: 0; }
+.act__plate { margin-top: 10px; max-width: 44ch; }
+
+/* Until its canvas is running (no script, no WebGL), an act is not pinned: the capture stands
+   in for the object and every chapter is simply written out. */
+.act__still { display: none; }
+.acts:not(.is-live) :is(.stage-wrap, .brain-wrap, .act__data) { display: none; }
+.acts:not(.is-live) .act { height: auto; padding: 60px var(--pad) 0; }
+.acts:not(.is-live) :is(.act__back, .act__front) { position: relative; height: auto; margin: 0; overflow: visible; }
+.acts:not(.is-live) .act__front::before { content: none; }
+.acts:not(.is-live) :is(.act__title, .act__col) { position: static; transform: none; width: auto; opacity: 1; }
+.acts:not(.is-live) .act__title { margin-bottom: 20px; }
+.acts:not(.is-live) .act__still { display: block; margin: 0 auto 26px; }
+.acts:not(.is-live) .act__still img { height: auto; }
+.acts:not(.is-live) .act--phone .act__still { width: 62%; aspect-ratio: 390 / 844; overflow: hidden; border-radius: 30px; }
+.acts:not(.is-live) .act--phone .act__still img { width: 300%; max-width: none; }
+.acts:not(.is-live) .act--laptop .act__still { aspect-ratio: 16 / 10; overflow: hidden; }
+.acts:not(.is-live) .chapters { display: block; }
+.acts:not(.is-live) .chapter { opacity: 1; transform: none; padding: 10px 0 12px; border-top: 1px solid rgba(244, 241, 234, 0.3); }
+.acts:not(.is-live) .chapter--lead { border-top: 0; padding: 0 0 18px; }
+.acts:not(.is-live) .callout--more { display: block; }
+.acts:not(.is-live) .act__progress { display: none; }
+.acts:not(.is-live) .act__col .row { border-top: 1px solid var(--paper); margin-top: 16px; }
+
+@media (min-width: 900px) {
+  :root {
+    --colw: calc((100vw - 2 * var(--pad) - 11 * var(--gap)) / 12);
+    --step: calc(var(--colw) + var(--gap));
+    /* Three columns wide. */
+    --w3: calc(3 * var(--colw) + 2 * var(--gap));
+  }
+  .act__front::before { content: none; }
+  .act__title { transform: none; }
+  /* On a wide screen it runs up the right-hand edge of the page, as the credit of the cover
+     photograph does. */
+  .act__data { position: absolute; right: 15px; top: 50%; margin: 0; writing-mode: vertical-rl; transform: translateY(-50%) rotate(180deg); opacity: var(--show, 1); }
+
+  /* In the two work acts the column comes apart: each piece takes its own place in the frame.
+     The sentences about the screen are set beside their brackets by the finder, so the ones
+     written here are kept for readers that do not see the canvas. */
+  .acts.is-live :is(.act--phone, .act--laptop) :is(.act__col, .chapters) { display: contents; }
+  .acts.is-live :is(.act--phone, .act--laptop) :is(.chapter, .act__progress, .row) { position: absolute; opacity: var(--show, 1); transform: none; }
+  .acts.is-live :is(.act--phone, .act--laptop) .chapter:not(.chapter--lead, .chapter--facts) { width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .chapter--lead p { max-width: none; padding-left: 1.5em; text-indent: -1.5em; font-size: 34px; line-height: 1.1; letter-spacing: -0.015em; }
+  .chapter--facts .facts dt { font-size: 13px; }
+  .acts.is-live :is(.act--phone, .act--laptop) .row { border-top: 0; }
+  .acts.is-live :is(.act--phone, .act--laptop) .act__progress { margin: 0; }
+
+  /* UKit: the title at the foot, cut by the frame; the phone right of centre, in front of its
+     last letters; the standfirst a step in from the left, high; the facts under it, a step
+     further in; the link alone at the foot on the right. */
+  .act--phone { --title: 38vw; }
+  .act--phone .act__title { top: auto; bottom: -6svh; left: calc(var(--pad) - 1.2vw); }
+  .acts.is-live .act--phone .chapter--lead { left: calc(var(--pad) + var(--step)); top: 16svh; width: calc(3.4 * var(--step)); }
+  .acts.is-live .act--phone .chapter--facts { left: calc(var(--pad) + 2 * var(--step)); top: 39svh; width: calc(2.7 * var(--step)); }
+  .acts.is-live .act--phone :is(.act__progress, .row) { right: var(--pad); width: var(--w3); }
+  .acts.is-live .act--phone .act__progress { bottom: calc(3svh + 51px); }
+  .acts.is-live .act--phone .row { bottom: 3svh; }
+
+  /* TLPerf: the title at the head, cut by the frame; the laptop low on the right; the
+     standfirst on the nav's line, beside the title; the link at the foot on the left, and the
+     facts above it, a step in. */
+  .act--laptop { --title: 25vw; }
+  .act--laptop .act__title { top: -3svh; left: calc(var(--pad) - 0.6vw); }
+  .acts.is-live .act--laptop .chapter--lead { left: calc(var(--pad) + 7 * var(--step)); top: 12svh; width: calc(4 * var(--step)); }
+  .acts.is-live .act--laptop .chapter--lead p { font-size: 30px; }
+  .acts.is-live .act--laptop .chapter--facts { left: calc(var(--pad) + 0.5 * var(--step)); bottom: 18svh; width: calc(2.6 * var(--step)); }
+  .acts.is-live .act--laptop :is(.act__progress, .row) { left: var(--pad); width: calc(2.4 * var(--step)); }
+  .acts.is-live .act--laptop .act__progress { bottom: calc(4svh + 51px); }
+  .acts.is-live .act--laptop .row { bottom: 4svh; }
+
+  /* KLNOS: the same grammar, on the plate. The title at the foot on the right, cut by the
+     frame; the standfirst a step in from the left, high; the chapter being read on the first
+     line, lower; the facts a step and a half in, near the foot; the link at the foot; and the
+     plate's caption up the right-hand edge, where the work acts read out their shot. */
+  .act--brain { --title: 28vw; }
+  .act--brain .act__title { top: auto; bottom: -5svh; left: auto; right: calc(var(--pad) - 0.8vw); }
+  .acts.is-live .act--brain :is(.act__col, .chapters) { display: contents; }
+  .acts.is-live .act--brain :is(.chapter, .act__progress, .row, .act__plate) { position: absolute; }
+  .acts.is-live .act--brain :is(.chapter--lead, .chapter--facts) { opacity: var(--show, 1); transform: none; }
+  .acts.is-live .act--brain .chapter--lead { left: calc(var(--pad) + var(--step)); top: 16svh; width: calc(3.4 * var(--step)); }
+  .acts.is-live .act--brain .chapter--lead p { margin: 0; padding-left: 1.5em; text-indent: -1.5em; font-size: 34px; }
+  .acts.is-live .act--brain .chapter--lead .chapter__gain { margin-top: 18px; padding-left: 1.4em; text-indent: -1.4em; font-size: 19px; line-height: 1.3; letter-spacing: 0; }
+  .acts.is-live .act--brain .chapter:not(.chapter--lead, .chapter--facts) { left: var(--pad); top: 44svh; width: var(--w3); }
+  .act--brain .chapter h3 { font-size: 46px; line-height: 1; letter-spacing: -0.02em; }
+  .act--brain .chapter p { margin-top: 10px; padding-left: 1.4em; text-indent: -1.4em; font-size: 19px; }
+  .acts.is-live .act--brain .chapter--facts { left: calc(var(--pad) + 1.5 * var(--step)); bottom: 18svh; width: calc(2.6 * var(--step)); }
+  .acts.is-live .act--brain :is(.act__progress, .row) { left: var(--pad); width: calc(2.4 * var(--step)); opacity: var(--show, 1); }
+  .acts.is-live .act--brain .act__progress { bottom: calc(4svh + 51px); margin: 0; }
+  .acts.is-live .act--brain .row { bottom: 4svh; border-top: 0; }
+  .acts.is-live .act--brain .act__plate { right: 15px; top: 50%; margin: 0; max-width: none; white-space: nowrap; writing-mode: vertical-rl; transform: translateY(-50%) rotate(180deg); opacity: var(--show, 1); }
+
+  .acts:not(.is-live) .act { padding-top: 110px; }
+  .acts:not(.is-live) .act--phone .act__still { width: 26%; }
+  .acts:not(.is-live) .act--laptop .act__still { width: 62%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter { transition: none; }
+}
+.is-shot .chapter { transition: none; }

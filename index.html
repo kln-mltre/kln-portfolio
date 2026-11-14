@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kylian Malartre, a studio of one</title>
+<meta name="description" content="Kylian Malartre designs, builds and secures products: one person, working like a team. UKit, 10,000+ downloads. tlperf.com, live.">
+<meta name="theme-color" content="#0b0b0a">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<!-- Before the first paint: what waits for the scripts must not wait when they are off. -->
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..600&display=swap">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/cover.css">
+<link rel="stylesheet" href="css/work.css">
+<link rel="stylesheet" href="css/pages.css">
+<script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}</script>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="bar" id="bar" data-in>
+  <a class="bar__name" href="#top">Kylian Malartre</a>
+  <nav class="bar__nav" aria-label="Sections">
+    <a href="#work" data-section="work">Work</a>,
+    <a href="#system" data-section="system">System</a>,
+    <a href="#services" data-section="services">Services</a>,
+    <a href="#about" data-section="about">About</a>
+  </nav>
+  <a class="button bar__contact" href="#contact">Contact</a>
+</header>
+
+<section class="cover" id="top">
+  <div class="cover__layer cover__plate">
+    <img src="img/cover-plate-1170.jpg" srcset="img/cover-plate-1170.jpg 1170w, img/cover-plate-2048.jpg 2048w" sizes="100vw" alt="The Eiffel Tower at night" fetchpriority="high">
+  </div>
+  <h1 class="cover__name display" data-in>Kylian Malartre</h1>
+  <div class="cover__layer cover__subject">
+    <img src="img/cover-subject-1170.webp" srcset="img/cover-subject-1170.webp 1170w, img/cover-subject-2048.webp 2048w" sizes="100vw" alt="Kylian adjusting his sunglasses">
+  </div>
+  <div class="cover__veil"></div>
+  <p class="credit cover__credit" data-in>In frame: the Eiffel Tower, 48.8583° N, 2.2945° E. Paris, at night.</p>
+  <div class="cover__foot">
+    <p class="cover__line" data-in>I design, build and secure products: one person, working like a team.</p>
+    <nav class="cover__proofs" aria-label="Proof">
+      <a class="row" data-in href="#ukit"><span>UKit, 10,000+ downloads</span><span class="row__arrow">→</span></a>
+      <a class="row" data-in href="#tlperf"><span>tlperf.com, live</span><span class="row__arrow">→</span></a>
+      <a class="row" data-in href="#klnos"><span>KLNOS, the system behind</span><span class="row__arrow">→</span></a>
+    </nav>
+  </div>
+</section>
+
+<main class="pages">
+
+  <section class="count block" id="numbers">
+    <div class="label"><h2>In numbers</h2><span>Checked in November 2026</span></div>
+    <div class="count__grid">
+      <div class="count__figure display" aria-label="10,000+">
+        <span class="count__digits" aria-hidden="true">10,000</span><sup aria-hidden="true">+</sup>
+      </div>
+      <p class="count__text">downloads for UKit on Google Play, the companion app for students of the University of Bordeaux.</p>
+    </div>
+    <ul class="tally">
+      <li><span class="tally__figure display">559</span><span class="tally__text">assertions on the database of KLNOS alone: access rules, constraints, expiry.</span></li>
+      <li><span class="tally__figure display">375</span><span class="tally__text">test files behind the same system, from unit to end-to-end.</span></li>
+      <li><span class="tally__figure display">262</span><span class="tally__text">decisions on record, so that none is made twice.</span></li>
+    </ul>
+  </section>
+
+  <section class="work acts" id="work">
+    <div class="stage-wrap" aria-hidden="true"><div class="stage-pin"><canvas class="stage" id="stage"></canvas><canvas class="finder" id="finder"></canvas></div></div>
+
+    <article class="act act--phone" id="ukit">
+      <div class="act__back"><h2 class="act__title display">UKit</h2></div>
+      <div class="act__front">
+        <figure class="act__still"><img src="img/ukit-screens.jpg" width="2160" height="1480" alt="Three screens of the UKit app: timetable, campus and studies" loading="lazy"></figure>
+        <div class="act__col">
+          <ol class="chapters">
+            <li class="chapter chapter--lead" data-at="-1,0.08"><p>The University of Bordeaux in one app.</p></li>
+            <li class="chapter" data-at="0.08,0.35"><h3>Timetable</h3>
+              <p class="callout" data-rect="0,0.04,0.315,0.96,0.476">Every class of the week, readable offline</p>
+              <p class="callout callout--more" data-rect="0,0.66,0.147,0.95,0.19">By day or by week</p></li>
+            <li class="chapter" data-at="0.35,0.67"><h3>Campus</h3>
+              <p class="callout" data-rect="1,0.045,0.207,0.64,0.623">Announcements from the university</p>
+              <p class="callout callout--more" data-rect="1,0.045,0.681,0.96,0.823">Canteens and libraries</p></li>
+            <li class="chapter" data-at="0.67,0.88"><h3>Studies</h3>
+              <p class="callout" data-rect="2,0.045,0.293,0.955,0.388">Moodle, one tap away</p>
+              <p class="callout callout--more" data-rect="2,0.045,0.405,0.955,0.545">University mail and documents</p></li>
+            <li class="chapter chapter--facts" data-at="0.88,2">
+              <dl class="facts">
+                <div><dt>Platforms</dt><dd>iOS, Android</dd></div>
+                <div><dt>Built with</dt><dd>Expo, React Native</dd></div>
+                <div><dt>Version</dt><dd>6.2</dd></div>
+                <div><dt>Downloads</dt><dd>10,000+</dd></div>
+              </dl>
+            </li>
+          </ol>
+          <div class="act__progress"></div>
+          <a class="row" href="https://ukit-bordeaux.fr/" target="_blank" rel="noopener"><span>ukit-bordeaux.fr</span><span class="row__arrow">→</span></a>
+          <p class="credit act__data" aria-hidden="true"></p>
+        </div>
+      </div>
+    </article>
+
+    <article class="act act--laptop" id="tlperf">
+      <div class="act__back"><h2 class="act__title display">TLPerf</h2></div>
+      <div class="act__front">
+        <figure class="act__still"><img src="img/tlperf-page.jpg" width="1424" height="2100" alt="Home page of tlperf.com" loading="lazy"></figure>
+        <div class="act__col">
+          <ol class="chapters">
+            <li class="chapter chapter--lead" data-at="-1,0.14"><p>A personal trainer's site, built to turn visitors into booked calls.</p></li>
+            <li class="chapter" data-at="0.14,0.66"><h3>Home</h3>
+              <p class="callout" data-rect="0.04,0.121,0.59,0.236" data-side="left">One promise, in the visitor's words</p>
+              <p class="callout callout--more" data-rect="0.04,0.312,0.23,0.337" data-side="left">One button: book a call</p></li>
+            <li class="chapter" data-at="0.66,0.9"><h3>The coach</h3>
+              <p class="callout" data-rect="0.47,0.514,0.79,0.613">The man behind it, by name</p>
+              <p class="callout callout--more" data-rect="0.47,0.738,0.91,0.775">The values he coaches by</p></li>
+            <li class="chapter chapter--facts" data-at="0.9,2">
+              <dl class="facts">
+                <div><dt>Client</dt><dd>Personal trainer</dd></div>
+                <div><dt>Scope</dt><dd>Design and code</dd></div>
+                <div><dt>Built with</dt><dd>Next.js, Tailwind</dd></div>
+                <div><dt>Status</dt><dd>Live</dd></div>
+              </dl>
+            </li>
+          </ol>
+          <div class="act__progress"></div>
+          <a class="row" href="https://www.tlperf.com/" target="_blank" rel="noopener"><span>tlperf.com</span><span class="row__arrow">→</span></a>
+          <p class="credit act__data" aria-hidden="true"></p>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="system acts" id="system">
+    <article class="act act--brain" id="klnos">
+      <div class="act__back"><h2 class="act__title display">KLNOS</h2></div>
+      <div class="brain-wrap" aria-hidden="true"><canvas class="brain" id="brain"></canvas></div>
+      <div class="act__front">
+        <div class="act__col">
+          <ol class="chapters">
+            <li class="chapter chapter--lead" data-at="-1,0.1"><p>KLNOS, my own operating system: the cockpit my agents report to.</p><p class="chapter__gain">For a client, it means work that is checked before it ships, and a written reason behind every choice.</p></li>
+            <li class="chapter" data-at="0.1,0.28" data-kind="rule"><h3>9 rules</h3><p>One constitution, then a file per craft: design, writing, SQL, tests.</p></li>
+            <li class="chapter" data-at="0.28,0.46" data-kind="agent"><h3>3 agents</h3><p>One explores, one builds, one reviews with fresh eyes. 5 skills between them.</p></li>
+            <li class="chapter" data-at="0.46,0.62" data-kind="hook"><h3>4 hooks</h3><p>They report every session, fence the browser, and hold anything other people would see until I approve it.</p></li>
+            <li class="chapter" data-at="0.62,0.78" data-kind="note"><h3>112 notes</h3><p>What an agent learns is written down. 262 decisions on record.</p></li>
+            <li class="chapter" data-at="0.78,0.92" data-kind="project"><h3>559 assertions</h3><p>On the database alone. 375 test files cover the rest.</p></li>
+            <li class="chapter chapter--facts" data-at="0.92,2">
+              <dl class="facts">
+                <div><dt>Built with</dt><dd>Next.js, Supabase</dd></div>
+                <div><dt>Interfaces</dt><dd>Web app, REST API</dd></div>
+                <div><dt>Runs in</dt><dd>Paris</dd></div>
+              </dl>
+            </li>
+          </ol>
+          <div class="act__progress"></div>
+          <a class="row" href="#services"><span>Supabase audits</span><span class="row__arrow">→</span></a>
+          <p class="credit act__plate">Each mark is a real file, hook or repository. The lines are drawn for this page.</p>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="services block" id="services">
+    <div class="label"><h2>Services</h2><span>Available for freelance work</span></div>
+    <ul class="services__list">
+      <li><a class="service" href="#contact"><span class="service__name">Apps and websites</span><span class="service__note">Designed, built and shipped by one person.</span><span class="service__arrow">→</span></a></li>
+      <li><a class="service" href="#contact"><span class="service__name">Supabase security audits</span><span class="service__note">Proof that each user only reaches their own data.</span><span class="service__arrow">→</span></a></li>
+    </ul>
+    <p class="services__more"><span>Systems work, automation and the rest of the code</span><a href="https://github.com/kln-mltre" target="_blank" rel="noopener">GitHub →</a></p>
+  </section>
+
+  <section class="about block" id="about">
+    <div class="label"><h2>About</h2><span>Bordeaux, France</span></div>
+    <p class="about__lead display display--long">One person, a written method, and agents that follow it.</p>
+    <div class="about__grid">
+      <figure class="shot" id="shot">
+        <div class="shot__frame">
+          <img class="shot__bw" src="img/hand-bw.jpg" width="1500" height="1623" alt="Kylian in a red leather jacket, one hand held out toward the camera" loading="lazy">
+          <img class="shot__colour" src="img/hand-colour.jpg" width="1500" height="1623" alt="" loading="lazy">
+          <div class="shot__flash"></div>
+        </div>
+        <figcaption>
+          <dl class="facts shot__facts">
+            <div><dt>Place</dt><dd>Bordeaux</dd></div>
+            <div><dt>Light</dt><dd>Night, direct flash</dd></div>
+          </dl>
+        </figcaption>
+      </figure>
+      <div class="about__main">
+        <div class="about__notes">
+          <p>It is how I ship what used to take a team. I am a master's student in computer science at the University of Bordeaux, and I take a product from the first sketch to the store.</p>
+          <p>Outside of code: weightlifting, at an advanced level, and a soft spot for design that takes a stand.</p>
+        </div>
+        <div class="call" id="contact">
+          <h3 class="call__title display">Let's talk</h3>
+          <p class="call__lead">For a project, a role or an audit.</p>
+          <a class="button call__cta" href="mailto:kylian.malartre@gmail.com">Write to me</a>
+          <nav class="call__links" aria-label="Links">
+            <a class="row" href="#"><span>Résumé, one page</span><span class="row__arrow">↓</span></a>
+            <a class="row" href="https://github.com/kln-mltre" target="_blank" rel="noopener"><span>GitHub</span><span class="row__arrow">→</span></a>
+            <a class="row" href="#"><span>LinkedIn</span><span class="row__arrow">→</span></a>
+            <a class="row" href="#"><span>Instagram</span><span class="row__arrow">→</span></a>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="about__foot">
+      <p class="credit">This site was built with the system described above.</p>
+      <p class="about__legal"><span>Kylian Malartre, 2026</span><a href="#">Previous version of this site →</a></p>
+    </div>
+  </section>
+
+</main>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
