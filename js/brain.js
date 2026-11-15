@@ -18,6 +18,11 @@ const NOTES = 108;
 const NOTES_PER_PROJECT = 24;
 // The furthest a mark sits from the centre, in graph radii.
 const EXTENT = 1.26;
+// Each mark drifts round its place by this much (graph radii), at these paces (radians per ms).
+const DRIFT = 0.011;
+const DRIFT_PACE = [0.00045, 0.00038];
+// At rest, the plate is drawn again once a mark may have moved this far, in device pixels.
+const QUARTER_PIXEL = 0.25;
 const TAU = Math.PI * 2;
 
 // A mark of each kind: how big, what shape, how visible when its chapter is not being read.
@@ -148,8 +153,10 @@ export function initBrain({ acts, still, reduced }) {
     dirty = true;
   };
 
+  let drawnAt = 0;
   function draw(time = 0) {
     dirty = false;
+    drawnAt = time;
     ctx.setTransform(geo.dpr, 0, 0, geo.dpr, 0, 0);
     ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
     const v = state.v;
@@ -166,10 +173,10 @@ export function initBrain({ acts, still, reduced }) {
     const turn = reduced ? 0 : -0.3 + v * 0.62;
     const cos = Math.cos(turn);
     const sin = Math.sin(turn);
-    const drift = reduced || still ? 0 : 0.011;
+    const drift = reduced || still ? 0 : DRIFT;
     const at = nodes.map((n) => {
-      const x = n.x + Math.sin(time * 0.00045 + n.phase) * drift;
-      const y = n.y + Math.cos(time * 0.00038 + n.phase * 1.7) * drift;
+      const x = n.x + Math.sin(time * DRIFT_PACE[0] + n.phase) * drift;
+      const y = n.y + Math.cos(time * DRIFT_PACE[1] + n.phase * 1.7) * drift;
       return [geo.cx + (x * cos - y * sin) * geo.r, geo.cy + (x * sin + y * cos) * geo.r];
     });
 
@@ -247,11 +254,14 @@ export function initBrain({ acts, still, reduced }) {
   resize();
   new ResizeObserver(resize).observe(canvas);
 
-  // Draw only when something changed, or while the act is on screen and the marks drift.
+  // Draw when something changed; at rest, while the act is on screen, once the drift may have
+  // moved a mark far enough to show. The marks drift a few pixels over many seconds: drawing
+  // the whole plate every frame for it cost as much as everything else on the page at rest.
+  const drifted = (time) => (time - drawnAt) * Math.max(...DRIFT_PACE) * Math.SQRT2 * DRIFT * geo.r * geo.dpr;
   let onScreen = false;
   new IntersectionObserver((entries) => { onScreen = entries[0].isIntersecting; }).observe(act);
   const loop = (time) => {
-    if (dirty || (onScreen && !reduced && !still)) draw(time);
+    if (dirty || (onScreen && !reduced && !still && drifted(time) >= QUARTER_PIXEL)) draw(time);
     requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);

@@ -19,6 +19,12 @@ const CAMERA_Z = 5.2;
 const VIEW_H = 2 * CAMERA_Z * Math.tan(THREE.MathUtils.degToRad(FOV / 2));
 // What a full-frame camera would need to see as this one does: the lens named in the margin.
 const LENS = Math.round(12 / Math.tan(THREE.MathUtils.degToRad(FOV / 2)));
+// How the objects float at rest (amplitude in scene units, pace in radians per millisecond).
+const PHONE_FLOAT = [0.012, 0.0011];
+const LAPTOP_FLOAT = [0.008, 0.0009];
+// At rest, a new frame once the float has moved something this far, in device pixels: a frame
+// that differs by less cannot be told from the one before.
+const QUARTER_PIXEL = 0.25;
 
 // acts: where the scroll is in each act (js/acts.js).
 // still: capture mode, where nothing floats and a frame is drawn on request.
@@ -145,7 +151,7 @@ export function initStage({ acts, still, reduced, mono }) {
     // Leaves as the words of its act do (js/acts.js): it starts up a little before the pin
     // ends and is at the pace of the scroll a little after.
     const exit = Math.min(released(v <= 1 ? (v - 1) * fit.travel : v - 1, RELEASE), 1);
-    const float = reduced || still ? 0 : Math.sin(time * 0.0011) * 0.012;
+    const float = reduced || still ? 0 : Math.sin(time * PHONE_FLOAT[1]) * PHONE_FLOAT[0];
     const keys = PHONE_KEYS[fit.wide ? 'wide' : 'narrow'];
     const look = reduced ? keys[0] : along(keys, t);
     // Enters showing its back and turns to face the reader; leaves upward, turning away.
@@ -173,7 +179,7 @@ export function initStage({ acts, still, reduced, mono }) {
     const enter = soft(rise);
     const t = span(v, 0, 1);
     const leave = span(v, 1, 2);
-    const float = reduced || still ? 0 : Math.sin(time * 0.0009) * 0.008;
+    const float = reduced || still ? 0 : Math.sin(time * LAPTOP_FLOAT[1]) * LAPTOP_FLOAT[0];
     const keys = LAPTOP_KEYS[fit.wide ? 'wide' : 'narrow'];
     const look = reduced ? keys[0] : along(keys, t);
     // Arrives closed, seen from above; opens as it settles.
@@ -189,7 +195,9 @@ export function initStage({ acts, still, reduced, mono }) {
     g.position.y += lerp(-2.6, 0, rise) + float;
   }
 
+  let drawnAt = 0;
   function draw(time = performance.now()) {
+    drawnAt = time;
     posePhone(state.phone, time);
     poseLaptop(state.laptop, time);
     // The piece of screen being talked about stays sharp; the rest of the screen goes out of focus.
@@ -236,14 +244,31 @@ export function initStage({ acts, still, reduced, mono }) {
   resize();
   new ResizeObserver(resize).observe(canvas);
 
-  // Render only when something changed, or while the section is on screen and the objects float.
+  // How far the float has carried the objects since the last frame, in device pixels, at the
+  // part that moves most: the phone also rocks on itself, so its far corners move further.
+  const pixelsPerUnit = () => renderer.domElement.height / VIEW_H;
+  const moved = (time) => {
+    const shift = ([amount, pace]) => Math.abs(Math.sin(time * pace) - Math.sin(drawnAt * pace)) * amount;
+    let most = 0;
+    if (phone.group.visible) {
+      const reach = phone.group.scale.x * Math.hypot(PHONE_WIDTH, PHONE_HEIGHT) / 2;
+      most = shift(PHONE_FLOAT) * (1 + 1.5 * reach);
+    }
+    if (laptop.group.visible) most = Math.max(most, shift(LAPTOP_FLOAT));
+    return most * pixelsPerUnit();
+  };
+
+  // Render when something changed; at rest, while the section is on screen, when the float has
+  // moved enough to show. It is slow (a fraction of a pixel per frame on a wide shot): drawing
+  // every frame for it kept a modest graphics chip busy the whole time the objects were seen.
   let onScreen = false;
   new IntersectionObserver((entries) => { onScreen = entries[0].isIntersecting; }).observe(work);
   const loop = (time) => {
-    if (dirty || (onScreen && !reduced && !still && pending === 0)) draw(time);
+    if (dirty || (onScreen && !reduced && !still && pending === 0 && moved(time) >= QUARTER_PIXEL)) draw(time);
     requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);
+
 
   return ready.then(() => ({ draw }));
 }
