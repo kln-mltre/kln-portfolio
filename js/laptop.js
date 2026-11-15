@@ -119,13 +119,13 @@ export function createLaptop(onReady, onDetail) {
   hinge.add(bezel);
 
   let view = 0.42;
-  const page = loadTexture('img/tlperf-page.jpg', () => {
+  const page = loadTexture('img/tlperf-page.webp', () => {
     // The screen shows a 16:10 window of the tall capture.
     view = page.image.width / 1.6 / page.image.height;
     display.uniforms.view.value.set(1, view, 0, 1 - view);
     onReady();
   });
-  const display = screenMaterial(page, loadTexture('img/tlperf-page-soft.jpg', onDetail));
+  const display = screenMaterial(page, loadTexture('img/tlperf-page-soft.webp', onDetail));
   display.uniforms.size.value.set(SCREEN_W, SCREEN_H);
   display.uniforms.corner.value = 0.012;
   display.uniforms.view.value.set(1, view, 0, 1 - view);
