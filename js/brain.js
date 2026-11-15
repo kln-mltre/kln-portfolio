@@ -229,8 +229,8 @@ export function initBrain({ acts, still, reduced }) {
       if (length < 1) { dx = 0.72; dy = -0.7; } else { dx /= length; dy /= length; }
       const gap = size + 7;
       ctx.font = node.kind === 'project'
-        ? `500 ${geo.wide ? 15 : 13}px "Instrument Sans", Helvetica, Arial, sans-serif`
-        : `${geo.wide ? 12.5 : 11}px "Instrument Sans", Helvetica, Arial, sans-serif`;
+        ? `${geo.wide ? 15 : 13}px "Malartre Texte", Georgia, serif`
+        : `${geo.wide ? 12.5 : 11}px "Malartre Texte", Georgia, serif`;
       ctx.textAlign = dx > 0.35 ? 'left' : dx < -0.35 ? 'right' : 'center';
       ctx.textBaseline = dy > 0.6 ? 'top' : dy < -0.6 ? 'bottom' : 'middle';
       ctx.fillStyle = `rgba(${PAPER}, ${named.toFixed(3)})`;

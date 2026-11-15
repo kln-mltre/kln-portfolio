@@ -1,6 +1,9 @@
 /* Tokens, type, and the pieces every section shares. */
 @font-face { font-family: 'Malartre Gravee'; src: url('../fonts/Malartre-Gravee.woff2') format('woff2'); font-display: swap; }
 @font-face { font-family: 'Malartre Fine'; src: url('../fonts/Malartre-Fine.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: 'Malartre Texte'; src: url('../fonts/Malartre-Texte.woff2') format('woff2'); font-display: swap; }
+/* Noto Serif draws no arrow: the arrows of the rows come from this file, and from it alone. */
+@font-face { font-family: 'Malartre Fleche'; src: url('../fonts/Malartre-Fleche.woff2') format('woff2'); font-display: swap; unicode-range: U+2192-2193; }
 
 :root {
   --night: #0b0b0a;
@@ -10,7 +13,8 @@
   --red: #d21b10;
   --serif: 'Malartre Gravee', Georgia, serif;
   --serif-long: 'Malartre Fine', Georgia, serif;
-  --sans: 'Instrument Sans', Helvetica, Arial, sans-serif;
+  /* The text: Malartre Texte, the small-size drawing of the family of the titles (tools/police.py). */
+  --text: 'Malartre Texte', 'Malartre Fleche', Georgia, serif;
   --pad: 20px;
   --gap: 20px;
   --out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -25,7 +29,7 @@ html { -webkit-text-size-adjust: 100%; background: var(--night); overflow-x: cli
 body {
   background: var(--night);
   color: var(--paper);
-  font-family: var(--sans);
+  font-family: var(--text);
   font-size: 17px;
   line-height: 1.35;
   -webkit-font-smoothing: antialiased;
@@ -48,6 +52,8 @@ img { display: block; max-width: 100%; }
 
 /* A title that runs over several lines takes Fine, the lighter and wider style. */
 .display--long { font-family: var(--serif-long); }
+/* No word left alone on the last line of a paragraph (the serif text runs wider than the sans did). */
+p, dd, .tally__text, .service__note { text-wrap: pretty; }
 
 /* Section label: a hairline that draws itself across the page, what this is, and one fact. */
 .label {

@@ -3,7 +3,7 @@
 // gives, for every frame, the four corners of each piece and how far it has been singled out.
 const PAPER = '244, 241, 234';
 const NIGHT = '11, 11, 10';
-const FONT = '"Instrument Sans", Helvetica, Arial, sans-serif';
+const FONT = '"Malartre Texte", Georgia, serif';
 
 // Breaks a sentence into lines no wider than `width`.
 function wrap(ctx, text, width) {
