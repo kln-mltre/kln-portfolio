@@ -22,9 +22,12 @@ export function initCover({ reduced, manual }) {
     ...[...cover.querySelectorAll('.cover__proofs .row')].map((row, index) => [row, ROW[0] + index * ROW[2], ROW[1]]),
     [cover.querySelector('.cover__credit'), ...CREDIT],
   ];
-  const enter = (ms) => parts.forEach(([el, start, length]) => {
-    el.style.setProperty('--k', ms === null ? '1' : expo(span(ms - start, 0, length)).toFixed(4));
-  });
+  const enter = (ms) => {
+    parts.forEach(([el, start, length]) => {
+      el.style.setProperty('--k', ms === null ? '1' : expo(span(ms - start, 0, length)).toFixed(4));
+    });
+    cover.classList.toggle('is-arrived', ms === null);
+  };
 
   if (reduced) { enter(null); return { enter }; }
 

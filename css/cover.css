@@ -49,10 +49,12 @@
   transform: translate3d(calc(var(--mx) * 5px), calc(var(--s) * -5svh), 0);
   will-change: transform;
   /* Focus: out of focus and a little loose, then sharp and tight. */
-  filter: blur(calc((1 - var(--k)) * 18px));
   opacity: calc(0.3 + var(--k) * 0.7);
   letter-spacing: calc((1 - var(--k)) * 0.028em);
 }
+/* The blur only while the words arrive (js/cover.js sets is-arrived): a blur of nothing is still
+   a filter, which a browser may keep redrawing for as long as the cover is on screen. */
+.js .cover:not(.is-arrived) .cover__name { filter: blur(calc((1 - var(--k)) * 18px)); }
 
 .cover__subject {
   z-index: 3;
@@ -91,7 +93,8 @@
 }
 
 .cover__foot { position: relative; z-index: 5; margin-top: auto; padding: 0 var(--pad) 20px; }
-.cover__foot [data-in] { opacity: var(--k); filter: blur(calc((1 - var(--k)) * 5px)); translate: 0 calc((1 - var(--k)) * 10px); }
+.cover__foot [data-in] { opacity: var(--k); translate: 0 calc((1 - var(--k)) * 10px); }
+.js .cover:not(.is-arrived) .cover__foot [data-in] { filter: blur(calc((1 - var(--k)) * 5px)); }
 .cover__line { max-width: 31ch; font-size: 19px; }
 .cover__proofs { margin-top: 16px; }
 .cover__proofs .row { padding: 10px 0 12px; font-size: 20px; }
