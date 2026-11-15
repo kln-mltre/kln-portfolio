@@ -73,7 +73,9 @@ function build() {
     APPLIES[name].forEach((p) => link(id, projects[p], ['rule', 'project'], nodes[id].born + 0.035));
   });
   AGENTS.forEach((name, i) => link(hub, add('agent', name, -82 + i * 120, 0.2, 0.28 + i * 0.02), ['agent']));
-  SKILLS.forEach((name, i) => link(hub, add('skill', name, -52 + i * 72 + jitter(6), 0.36 + jitter(0.02), 0.32 + i * 0.016), ['agent']));
+  // The skills sit between the agents (at least 12 degrees off each), or an agent's name, which
+  // runs outwards, lands on a skill's (reviewer was set on recall).
+  SKILLS.forEach((name, i) => link(hub, add('skill', name, -22 + i * 72 + jitter(6), 0.36 + jitter(0.02), 0.32 + i * 0.016), ['agent']));
   HOOKS.forEach((name, i) => link(hub, add('hook', name, 28 + i * 90, 0.5, 0.46 + i * 0.022), ['hook']));
   // Notes gather round the project they belong to; the rest float between them.
   projects.forEach((project) => {
