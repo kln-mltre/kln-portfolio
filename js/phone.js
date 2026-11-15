@@ -84,8 +84,8 @@ export function createPhone(onReady, onDetail) {
 
   // The app screens sit side by side in one image (the welcome page of the onboarding, then
   // timetable, campus, studies); sliding the window swipes between them.
-  const texture = loadTexture('img/ukit-screens.jpg', onReady);
-  const display = screenMaterial(texture, loadTexture('img/ukit-screens-soft.jpg', onDetail));
+  const texture = loadTexture('img/ukit-screens.webp', onReady);
+  const display = screenMaterial(texture, loadTexture('img/ukit-screens-soft.webp', onDetail));
   display.uniforms.size.value.set(SCREEN_W, SCREEN_H);
   display.uniforms.corner.value = 2.6 * MM;
   display.uniforms.view.value.set(1 / PHONE_SCREENS, 1, 0, 0);

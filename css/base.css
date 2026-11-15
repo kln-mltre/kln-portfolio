@@ -39,6 +39,8 @@ body {
 a { color: inherit; text-decoration: none; }
 ul, ol { list-style: none; }
 img { display: block; max-width: 100%; }
+/* A <picture> only offers a lighter file: it takes no place, its image sits where it was. */
+picture { display: contents; }
 
 /* The display face is Malartre, our own cut (tools/police.py; LISEZMOI, section Police).
    Gravee, its engraved style (tools/gravure.py), sets the few giant words: the name, the
@@ -116,7 +118,7 @@ p, dd, .tally__text, .service__note { text-wrap: pretty; }
   inset: -160px;
   z-index: 90;
   pointer-events: none;
-  background: url(../img/grain.png) 0 0 / 160px 160px;
+  background: url(../img/grain.webp) 0 0 / 160px 160px;
   animation: grain 0.9s steps(1) infinite;
 }
 @keyframes grain {

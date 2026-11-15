@@ -50,7 +50,10 @@
   </div>
   <h1 class="cover__name display" data-in>Kylian Malartre</h1>
   <div class="cover__layer cover__subject">
-    <img src="img/cover-subject-1170.webp" srcset="img/cover-subject-1170.webp 1170w, img/cover-subject-2048.webp 2048w" sizes="100vw" alt="Kylian adjusting his sunglasses">
+    <picture>
+      <source type="image/avif" srcset="img/cover-subject-1170.avif 1170w, img/cover-subject-2048.avif 2048w" sizes="100vw">
+      <img src="img/cover-subject-1170.webp" srcset="img/cover-subject-1170.webp 1170w, img/cover-subject-2048.webp 2048w" sizes="100vw" alt="Kylian adjusting his sunglasses">
+    </picture>
   </div>
   <div class="cover__veil"></div>
   <p class="credit cover__credit" data-in>Trocadéro, Paris, 26 July 2026, at night. In frame: the Eiffel Tower, 48.8583° N, 2.2945° E.</p>
@@ -87,7 +90,7 @@
     <article class="act act--phone" id="ukit">
       <div class="act__back"><h2 class="act__title display">UKit</h2></div>
       <div class="act__front">
-        <figure class="act__still"><img src="img/ukit-screens.jpg" width="4320" height="2337" alt="Four screens of the UKit app: its welcome page, timetable, campus and studies" loading="lazy"></figure>
+        <figure class="act__still"><img src="img/ukit-screens.webp" width="4320" height="2337" alt="Four screens of the UKit app: its welcome page, timetable, campus and studies" loading="lazy"></figure>
         <div class="act__col">
           <ol class="chapters">
             <li class="chapter chapter--lead" data-at="-1,0.1"><p>Your campus, in one app. The survival kit for students in Bordeaux.</p></li>
@@ -119,7 +122,7 @@
     <article class="act act--laptop" id="tlperf">
       <div class="act__back"><h2 class="act__title display">TLPerf</h2></div>
       <div class="act__front">
-        <figure class="act__still"><img src="img/tlperf-page.jpg" width="1424" height="2100" alt="Home page of tlperf.com" loading="lazy"></figure>
+        <figure class="act__still"><img src="img/tlperf-page.webp" width="2848" height="4200" alt="Home page of tlperf.com" loading="lazy"></figure>
         <div class="act__col">
           <ol class="chapters">
             <li class="chapter chapter--lead" data-at="-1,0.14"><p>A personal trainer's site, built to turn visitors into booked calls.</p></li>
@@ -190,8 +193,16 @@
     <div class="about__grid">
       <figure class="shot" id="shot">
         <div class="shot__frame">
-          <img class="shot__bw" src="img/hand-bw.jpg" width="1500" height="1623" alt="Kylian in a red leather jacket, one hand held out toward the camera" loading="lazy">
-          <img class="shot__colour" src="img/hand-colour.jpg" width="1500" height="1623" alt="" loading="lazy">
+          <!-- 1000 px is the most a common screen shows; the 1500 is for denser ones. In 1500 the
+               black and white stays a JPEG: its grain made the AVIF heavier. -->
+          <picture>
+            <source type="image/avif" srcset="img/hand-bw-1000.avif 1000w, img/hand-bw.jpg 1500w" sizes="(min-width: 900px) 34vw, 74vw">
+            <img class="shot__bw" src="img/hand-bw.jpg" width="1500" height="1623" alt="Kylian in a red leather jacket, one hand held out toward the camera" loading="lazy">
+          </picture>
+          <picture>
+            <source type="image/avif" srcset="img/hand-colour-1000.avif 1000w, img/hand-colour-1500.avif 1500w" sizes="(min-width: 900px) 34vw, 74vw">
+            <img class="shot__colour" src="img/hand-colour.jpg" width="1500" height="1623" alt="" loading="lazy">
+          </picture>
           <div class="shot__flash"></div>
         </div>
         <figcaption>
