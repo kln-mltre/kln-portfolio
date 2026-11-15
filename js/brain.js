@@ -136,10 +136,13 @@ export function initBrain({ acts, still, reduced }) {
     canvas.width = Math.round(w * geo.dpr);
     canvas.height = Math.round(h * geo.dpr);
     geo.wide = wide.matches;
-    // Wide: right of the column of words, which keeps the left-hand quarter. Narrow: above it.
-    geo.cx = w * (geo.wide ? 0.61 : 0.5);
+    // Wide: right of the column of words, which keeps the left-hand quarter; below 1200 px the
+    // column takes more than its quarter, so the graph moves right and draws in a little, or
+    // Portfolio is named under the standfirst. Narrow: above the words.
+    const tight = geo.wide && w < 1200;
+    geo.cx = w * (geo.wide ? (tight ? 0.65 : 0.61) : 0.5);
     geo.cy = h * (geo.wide ? 0.5 : 0.43);
-    geo.r = (geo.wide ? Math.min(w * 0.34, h * 0.45) : Math.min(w * 0.47, h * 0.3)) / EXTENT;
+    geo.r = (geo.wide ? Math.min(w * (tight ? 0.3 : 0.34), h * 0.45) : Math.min(w * 0.47, h * 0.3)) / EXTENT;
     dirty = true;
   };
 

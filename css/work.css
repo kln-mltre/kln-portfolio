@@ -189,6 +189,20 @@
   .acts:not(.is-live) .act--laptop .act__still { width: 62%; }
 }
 
+/* Below 1200 px a step is narrow, and below 800 px of height the frame is short: at 34 px the
+   standfirsts of UKit and KLNOS ran to four or five lines and reached what is set under them
+   (the facts, the chapter being read), on common laptops too (1280 x 800, 1366 x 768). */
+@media (min-width: 900px) and (max-width: 1199px), (min-width: 900px) and (max-height: 800px) {
+  .acts.is-live :is(.act--phone, .act--brain) .chapter--lead { width: calc(3.8 * var(--step)); }
+  .acts.is-live :is(.act--phone, .act--brain) .chapter--lead p { font-size: 28px; }
+  .acts.is-live .act--brain .chapter--lead .chapter__gain { font-size: 16px; }
+  .acts.is-live .act--brain .chapter--lead { top: 12svh; }
+  .acts.is-live .act--brain .chapter:not(.chapter--lead, .chapter--facts) { width: calc(3.4 * var(--step)); }
+  .act--brain .chapter h3 { font-size: 38px; }
+  .act--brain .chapter p { font-size: 17px; }
+  .acts.is-live .act--brain :is(.act__progress, .row) { width: calc(3 * var(--step)); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .chapter { transition: none; }
 }
