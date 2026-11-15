@@ -26,6 +26,12 @@ export const released = (x, a) => (x <= -a ? 0 : x >= a ? x : (x + a) ** 2 / (4 
 // Capture mode: no smoothing, every value sits on its target.
 export function setSnap(value) { snap = value; }
 
+// The smoothing is there for wheel notches. Under a finger the page already moves continuously,
+// and smoothing would only make what follows it trail behind, then catch up: on a phone, the
+// UKit phone lagged some 165 px behind the words at the end of its act on a 3,000 px/s flick,
+// and lingered over them. On a touch screen every value sits on its target.
+const touch = window.matchMedia('(pointer: coarse)');
+
 // measure(viewportHeight) returns the raw progress, kept within [min, max]; fn(value) applies it.
 // `write` names the custom property set on `el` with the smoothed value. `ease` is the share of
 // the way to the target covered in a sixtieth of a second: 0.2 trails the scroll by 75 ms.
@@ -65,7 +71,7 @@ export function update(force = false) {
   settled = true;
   for (const it of items) {
     it.target = clamp(Number.isFinite(it.raw) ? it.raw : 0, it.min, it.max);
-    let next = snap || it.fresh ? it.target : it.value + (it.target - it.value) * (1 - (1 - it.ease) ** frames);
+    let next = snap || it.fresh || touch.matches ? it.target :it.value + (it.target - it.value) * (1 - (1 - it.ease) ** frames);
     if (Math.abs(it.target - next) < 0.0004) next = it.target;
     else settled = false;
     if (next === it.value && !it.fresh) continue;
