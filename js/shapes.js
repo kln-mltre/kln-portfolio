@@ -19,15 +19,17 @@ export function roundedRect(w, h, r) {
 
 // A slab with rounded corners and a chamfered rim, centred on the origin, facing +z.
 // The bevel grows the outline, so the shape is drawn inset by its size to keep w and h exact.
-export function slab(w, h, depth, radius, bevel) {
+// curve and steps: segments in each rounded corner and across the chamfer, for a small slab drawn
+// many times (a key) that never shows them at the size of the defaults.
+export function slab(w, h, depth, radius, bevel, { curve = 20, steps = 4 } = {}) {
   const shape = roundedRect(w - 2 * bevel, h - 2 * bevel, Math.max(radius - bevel, 0.001));
   const geo = new THREE.ExtrudeGeometry(shape, {
     depth: depth - 2 * bevel,
     bevelEnabled: true,
     bevelThickness: bevel,
     bevelSize: bevel,
-    bevelSegments: 4,
-    curveSegments: 20,
+    bevelSegments: steps,
+    curveSegments: curve,
   });
   geo.translate(0, 0, -(depth - 2 * bevel) / 2);
   return geo;

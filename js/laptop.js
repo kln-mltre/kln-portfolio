@@ -15,6 +15,7 @@ const SCREEN_H = SCREEN_W / 1.6;
 const UNIT = 0.187;
 const GAP = 0.021;
 const KEY_H = 0.014;
+const KEY_SEGMENTS = { curve: 8, steps: 4 };
 const ROWS = [
   { depth: 0.55, keys: Array(14).fill(14.5 / 14) },
   { depth: 1, keys: [...Array(13).fill(1), 1.5] },
@@ -57,7 +58,7 @@ function keyboard(material, deckY) {
   const flat = new THREE.Matrix4().makeRotationX(-Math.PI / 2);
   const place = new THREE.Matrix4();
   sizes.forEach(({ w, d, at }) => {
-    const mesh = new THREE.InstancedMesh(slab(w, d, KEY_H, 0.022, 0.004), material, at.length);
+    const mesh = new THREE.InstancedMesh(slab(w, d, KEY_H, 0.022, 0.004, KEY_SEGMENTS), material, at.length);
     at.forEach(([kx, kz], index) => {
       place.makeTranslation(kx, deckY + KEY_H / 2, kz).multiply(flat);
       mesh.setMatrixAt(index, place);
