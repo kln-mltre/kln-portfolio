@@ -67,6 +67,55 @@ function keyboard(material, deckY) {
   return group;
 }
 
+// What is printed on the keys: the US layout most laptops carry, small and grey as on the real
+// thing. One entry per key of ROWS; the pair of arrows shares one place, as there.
+const LEGENDS = [
+  ['esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', ''],
+  ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'delete'],
+  ['tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
+  ['caps', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", 'return'],
+  ['shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'shift'],
+  ['fn', 'control', 'option', 'command', '', 'command', 'option', '←', ['↑', '↓'], '→'],
+];
+
+// The legends of every key, drawn once on a canvas laid just over the keys: one more draw call.
+function legends(deckY) {
+  const scale = 640;    // canvas pixels per scene unit
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.round(KEYS_W * scale);
+  canvas.height = Math.round(KEYS_D * scale);
+  const c = canvas.getContext('2d');
+  c.fillStyle = 'rgba(250, 249, 245, 0.95)';
+  c.textAlign = 'center';
+  c.textBaseline = 'middle';
+  let z = 0;
+  ROWS.forEach((row, r) => {
+    const depth = row.depth * UNIT;
+    let x = 0;
+    row.keys.forEach((key, k) => {
+      const width = (Array.isArray(key) ? 1 : key) * UNIT;
+      let offset = 0;
+      (Array.isArray(key) ? key : [1]).forEach((share, i) => {
+        const d = depth * share;
+        const label = Array.isArray(LEGENDS[r][k]) ? LEGENDS[r][k][i] : LEGENDS[r][k];
+        if (label) {
+          const size = (label.length > 2 ? 0.14 : r === 0 ? 0.2 : 0.3) * Math.min(UNIT, d / share);
+          c.font = `500 ${Math.round(size * scale)}px Helvetica, Arial, sans-serif`;
+          c.fillText(label, (x + width / 2) * scale, (z + offset + d / 2) * scale);
+        }
+        offset += d;
+      });
+      x += width;
+    });
+    z += depth;
+  });
+  const map = new THREE.CanvasTexture(canvas);
+  map.colorSpace = THREE.SRGBColorSpace;
+  map.anisotropy = 8;
+  const material = new THREE.MeshBasicMaterial({ map, transparent: true, depthWrite: false });
+  return laid(new THREE.PlaneGeometry(KEYS_W, KEYS_D), material, deckY + KEY_H + 0.0008, KEYS_TOP + KEYS_D / 2);
+}
+
 // A panel laid on its back, facing up.
 function laid(geometry, material, y, z) {
   const mesh = new THREE.Mesh(geometry, material);
@@ -92,6 +141,7 @@ export function createLaptop(onReady, onDetail) {
   group.add(laid(panel(W - 0.05, D - 0.05, 0.1), deck, BASE_T + 0.0006, 0));
   group.add(laid(panel(KEYS_W + 0.035, KEYS_D + 0.035, 0.03), dark, BASE_T + 0.0012, KEYS_TOP + KEYS_D / 2));
   group.add(keyboard(new THREE.MeshStandardMaterial({ color: 0x18181a, metalness: 0.05, roughness: 0.6 }), BASE_T + 0.0012));
+  group.add(legends(BASE_T + 0.0012));
   const padZ = (KEYS_TOP + KEYS_D + D / 2) / 2;
   const pad = new THREE.MeshStandardMaterial({ color: 0x808085, metalness: 0.7, roughness: 0.24 });
   group.add(laid(panel(1.28, 0.7, 0.045), pad, BASE_T + 0.0012, padZ));
