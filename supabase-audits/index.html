@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Supabase security audits, Kylian Malartre</title>
+<meta name="description" content="Can a signed-in user read or change someone else's rows? A Supabase audit that proves it, role by role, with a pgTAP test suite you keep. From 450 USD.">
+<meta name="theme-color" content="#0b0b0a">
+<link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="canonical" href="https://www.kylianmalartre.com/supabase-audits/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.kylianmalartre.com/supabase-audits/">
+<meta property="og:title" content="Supabase security audits, Kylian Malartre">
+<meta property="og:description" content="Row-level security, proven role by role, with a pgTAP test suite you keep.">
+<meta property="og:image" content="https://www.kylianmalartre.com/img/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kylian Malartre, his name engraved behind him, the Eiffel Tower at night">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="../fonts/Malartre-Texte.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/pages.css">
+<link rel="stylesheet" href="../css/audit.css">
+</head>
+<body class="audit">
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="bar">
+  <a class="bar__name" href="../">Kylian Malartre</a>
+  <a class="button bar__contact" href="#contact">Contact</a>
+</header>
+
+<main>
+
+  <section class="block audit__head">
+    <div class="label"><h2>Services</h2><span>For apps built on Supabase</span></div>
+    <h1 class="audit__title display display--long">Supabase security audits</h1>
+    <p class="audit__lead">Can a signed-in user read or change someone else’s rows? A scanner tells you whether row-level security is on. I prove whether it holds, for every table and every role, and you keep the tests.</p>
+  </section>
+
+  <section class="block">
+    <div class="label"><h2>What you get</h2><span>Yours to keep</span></div>
+    <ol class="audit__list">
+      <li><h3>An access matrix</h3><p>Who can read, add, change and delete what, table by table and role by role: what you meant, then what the database does.</p></li>
+      <li><h3>A test suite you can replay</h3><p>pgTAP tests that run with <code>supabase test db</code>, after every migration, long after the audit.</p></li>
+      <li><h3>Findings ranked by severity</h3><p>Each one with the exact query that proves it, and what it takes to close it.</p></li>
+      <li><h3>Fixes, if you want them</h3><p>An additive migration and a pull request, then the tests run again.</p></li>
+    </ol>
+  </section>
+
+  <section class="block">
+    <div class="label"><h2>Method</h2><span>No production data</span></div>
+    <ol class="audit__list">
+      <li><h3>From your schema</h3><p>Your migrations, on a local copy of the database, with made-up users: anonymous, user A, user B, admin. Your users’ data never leaves your project.</p></li>
+      <li><h3>A written authorization first</h3><p>Nothing is queried before it is signed. I never touch a production database.</p></li>
+      <li><h3>What is not covered, written down</h3><p>The report lists what the tests do not reach, so that nothing reads as checked when it was not.</p></li>
+    </ol>
+  </section>
+
+  <section class="block">
+    <div class="label"><h2>Offers</h2><span>Fixed price, in US dollars</span></div>
+    <ul class="offers">
+      <li class="offer">
+        <h3 class="offer__name">Access Check</h3>
+        <p class="offer__price"><span class="display">450</span> USD</p>
+        <dl class="facts offer__facts"><div><dt>Delivered</dt><dd>in 3 days</dd></div></dl>
+        <p class="offer__scope">The five most sensitive tables, tested as anonymous, user A and user B. A three-page report and a 30-minute call.</p>
+      </li>
+      <li class="offer">
+        <h3 class="offer__name">Verified Audit</h3>
+        <p class="offer__price"><span class="display">1,000</span> USD</p>
+        <dl class="facts offer__facts"><div><dt>Delivered</dt><dd>in 7 days</dd></div></dl>
+        <p class="offer__scope">The whole schema, the access matrix, the pgTAP suite and the report. Critical findings tested again within 30 days.</p>
+      </li>
+      <li class="offer">
+        <h3 class="offer__name">Audit and fix</h3>
+        <p class="offer__price"><span class="display">2,900</span> USD</p>
+        <dl class="facts offer__facts"><div><dt>Delivered</dt><dd>in 14 days</dd></div></dl>
+        <p class="offer__scope">The Verified Audit, then the fixes: an additive migration and a pull request, the tests in your CI, a last full run.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="label"><h2>Proof</h2><span>KLNOS, my own system</span></div>
+    <p class="audit__proof"><span class="audit__figure display">559</span><span class="audit__proof-text">assertions on the database of KLNOS, in 24 pgTAP files: the same kind of suite you receive, run before every release.</span></p>
+    <nav class="audit__links" aria-label="More">
+      <a class="row" href="../#system"><span>KLNOS on the home page</span><span class="row__arrow">→</span></a>
+    </nav>
+  </section>
+
+  <section class="block audit__end">
+    <div class="call" id="contact">
+      <h2 class="call__title display">Let's talk</h2>
+      <p class="call__lead">Send your stack and the number of tables: I answer with a scope and a date.</p>
+      <a class="button call__cta" href="mailto:kylian.malartre@gmail.com?subject=Supabase%20audit">Write to me</a>
+    </div>
+    <div class="about__foot">
+      <p class="about__legal"><span>Kylian Malartre, 2026</span><a href="../">The rest of my work →</a></p>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,54 @@
+/* The audit page (supabase-audits/): the grammar of the home page, its labels, ruled lists, fact
+   sheets and Gravee numbers, on a page that only reads. No scene, no script. */
+
+/* The bar stays where the page begins: there is no cover for it to wait on. */
+.audit .bar { position: absolute; }
+
+.audit__head { padding-top: 112px; }
+.audit__title { margin-top: 30px; max-width: 7.4em; font-size: 13.4vw; line-height: 0.94; }
+.audit__lead { margin-top: 26px; max-width: 30ch; padding-left: 1.4em; text-indent: -1.4em; font-size: 21px; line-height: 1.25; }
+
+/* A ruled list: what each thing is, then a line on it. */
+.audit__list { margin-top: 30px; }
+.audit__list li { padding: 12px 0 18px; border-top: 1px solid rgba(244, 241, 234, 0.24); }
+.audit__list h3 { font: inherit; font-size: 22px; line-height: 1.15; }
+.audit__list p { margin-top: 6px; max-width: 36ch; color: var(--mute); }
+code { font: inherit; color: var(--paper); }
+
+/* The three offers, side by side on a wide screen: the price in the face of the numbers. */
+.offers { margin-top: 30px; }
+.offer { padding-top: 12px; border-top: 1px solid var(--paper); }
+.offer + .offer { margin-top: 44px; }
+.offer__name { font: inherit; font-size: 22px; }
+.offer__price { margin-top: 14px; font-size: 19px; color: var(--mute); font-variant-numeric: lining-nums tabular-nums; }
+.offer__price .display { margin-right: 6px; font-size: 26vw; color: var(--paper); }
+.offer__facts { margin-top: 16px; }
+.offer__scope { margin-top: 12px; max-width: 34ch; }
+
+.audit__proof { margin-top: 30px; }
+.audit__figure { display: block; font-size: 42vw; font-variant-numeric: lining-nums tabular-nums; }
+.audit__proof-text { display: block; margin-top: 16px; max-width: 30ch; padding-left: 1.4em; text-indent: -1.4em; font-size: 21px; line-height: 1.25; }
+.audit__links { margin: 34px 0 0 12%; }
+.audit__end { padding-bottom: 40px; }
+
+@media (min-width: 900px) {
+  .audit .bar { grid-template-columns: repeat(12, 1fr); }
+  .audit__head { padding-top: 150px; }
+  .audit__title { margin-top: 54px; font-size: 7.9vw; line-height: 0.92; }
+  .audit__lead { margin: 40px 0 0 var(--step); max-width: 34ch; font-size: 30px; line-height: 1.18; }
+  .audit__list { margin: 54px 0 0 calc(3 * var(--step)); }
+  .audit__list li { display: grid; grid-template-columns: repeat(9, 1fr); column-gap: var(--gap); padding: 14px 0 26px; }
+  .audit__list h3 { grid-column: 1 / span 4; font-size: 30px; }
+  .audit__list p { grid-column: 5 / span 5; margin-top: 4px; font-size: 19px; }
+  .offers { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: var(--gap); margin-top: 54px; }
+  .offer + .offer { margin-top: 0; }
+  .offer__name { font-size: 30px; }
+  .offer__price .display { font-size: 8.4vw; }
+  .offer__scope { font-size: 19px; }
+  .audit__proof { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); margin-top: 40px; align-items: start; }
+  .audit__figure { grid-column: 1 / span 6; font-size: 24vw; }
+  .audit__proof-text { grid-column: 7 / span 5; margin-top: 4.4vw; font-size: clamp(20px, 1.8vw, 26px); line-height: 1.2; }
+  .audit__links { margin: 60px 0 0 calc(6 * var(--step)); }
+  .audit__links .row { font-size: 26px; }
+  .audit__end { padding-bottom: 60px; }
+}
