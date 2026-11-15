@@ -70,11 +70,12 @@ export function createPhone(onReady, onDetail) {
   const group = new THREE.Group();
 
   // Graphite: a dark polished steel band, black glass in front, frosted dark glass behind.
+  // The border round the display and the notch are one black, as on the phone: the cover glass
+  // over them gives the reflections. A varnished border of its own read grey next to the notch.
   const steel = new THREE.MeshStandardMaterial({ color: 0x4a4a4d, metalness: 1, roughness: 0.2 });
-  const black = new THREE.MeshPhysicalMaterial({ color: 0x030303, metalness: 0, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.1 });
   const frosted = new THREE.MeshPhysicalMaterial({ color: 0x3a3b3f, metalness: 0.25, roughness: 0.6 });
   const dark = new THREE.MeshBasicMaterial({ color: 0x000000 });
-  group.add(new THREE.Mesh(slab(BODY_W, BODY_H, DEPTH, BODY_R, 0.5 * MM), [black, steel]));
+  group.add(new THREE.Mesh(slab(BODY_W, BODY_H, DEPTH, BODY_R, 0.5 * MM), [dark, steel]));
 
   const backGlass = new THREE.Mesh(panel(BODY_W - 1.2 * MM, BODY_H - 1.2 * MM, BODY_R - 0.6 * MM), frosted);
   backGlass.rotation.y = Math.PI;
