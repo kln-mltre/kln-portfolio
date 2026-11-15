@@ -7,7 +7,7 @@
 .count__figure {
   position: relative;
   display: inline-block;
-  font-size: 40.8vw;
+  font-size: 49.2vw;
   white-space: nowrap;
   font-variant-numeric: lining-nums tabular-nums;
 }
@@ -17,7 +17,7 @@
 .reel__strip i { display: block; height: 0.9em; font-style: normal; }
 .count__figure sup { display: inline-block; font-size: 0.42em; line-height: 1; vertical-align: top; margin-top: 0.14em; color: var(--red); opacity: var(--plus, 1); }
 /* The comma of the figure hangs under its line by a tenth of the figure's size: the text keeps clear of it. */
-.count__text { margin-top: max(20px, 5.5vw); max-width: 28ch; padding-left: 1.6em; text-indent: -1.6em; font-size: 21px; line-height: 1.25; }
+.count__text { margin-top: max(20px, 6.6vw); max-width: 28ch; padding-left: 1.6em; text-indent: -1.6em; font-size: 21px; line-height: 1.25; }
 
 /* Three smaller figures, each a step further in and a size smaller than the one before. */
 .tally { margin-top: 64px; }
@@ -101,7 +101,7 @@
   .count { padding-bottom: 190px; }
   .count__grid { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); margin-top: 44px; }
   /* The large figure runs off the left edge by the width of its first stroke. */
-  .count__figure { grid-column: 1 / span 9; justify-self: start; margin-left: -1.4vw; font-size: 30.6vw; }
+  .count__figure { grid-column: 1 / span 9; justify-self: start; margin-left: -1.4vw; font-size: 36.9vw; }
   .count__text { grid-column: 9 / span 4; align-self: start; margin: 4.4vw 0 0; font-size: 26px; line-height: 1.2; }
   .tally { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); margin-top: 60px; align-items: start; }
   .tally li, .tally li + li { width: auto; margin: 0; padding-top: 12px; }
