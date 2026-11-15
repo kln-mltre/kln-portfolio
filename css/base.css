@@ -177,7 +177,14 @@ p, dd, .tally__text, .service__note { text-wrap: pretty; }
 .block { padding: 84px var(--pad) 0; }
 
 @media (min-width: 900px) {
-  :root { --pad: 44px; }
+  /* The twelve columns every page is laid on: a step is a column and its gap. */
+  :root {
+    --pad: 44px;
+    --colw: calc((100vw - 2 * var(--pad) - 11 * var(--gap)) / 12);
+    --step: calc(var(--colw) + var(--gap));
+    /* Three columns wide. */
+    --w3: calc(3 * var(--colw) + 2 * var(--gap));
+  }
   body { font-size: 19px; }
   .label { font-size: 19px; }
   .credit { font-size: 12.5px; }

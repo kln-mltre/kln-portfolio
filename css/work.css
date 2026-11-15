@@ -117,12 +117,6 @@
 .acts:not(.is-live) .act__col .row { border-top: 1px solid var(--paper); margin-top: 16px; }
 
 @media (min-width: 900px) {
-  :root {
-    --colw: calc((100vw - 2 * var(--pad) - 11 * var(--gap)) / 12);
-    --step: calc(var(--colw) + var(--gap));
-    /* Three columns wide. */
-    --w3: calc(3 * var(--colw) + 2 * var(--gap));
-  }
   .act__front::before { content: none; }
   .act__title { transform: none; }
   /* On a wide screen it runs up the right-hand edge of the page, as the credit of the cover
