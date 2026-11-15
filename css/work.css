@@ -140,11 +140,11 @@
   .acts.is-live :is(.act--phone, .act--laptop) .row { border-top: 0; }
   .acts.is-live :is(.act--phone, .act--laptop) .act__progress { margin: 0; }
 
-  /* UKit: the title at the foot, cut by the frame; the phone right of centre, in front of its
-     last letters; the standfirst a step in from the left, high; the facts under it, a step
-     further in; the link alone at the foot on the right. */
+  /* UKit: the title at the foot, cut by the left edge and the frame; the phone right of centre,
+     clear of its last letter (in the close-ups too); the standfirst a step in from the left,
+     high; the facts under it, a step further in; the link alone at the foot on the right. */
   .act--phone { --title: 38vw; }
-  .act--phone .act__title { top: auto; bottom: -6svh; left: calc(var(--pad) - 1.2vw); }
+  .act--phone .act__title { top: auto; bottom: -6svh; left: calc(var(--pad) - 5.5vw); }
   .acts.is-live .act--phone .chapter--lead { left: calc(var(--pad) + var(--step)); top: 16svh; width: calc(3.4 * var(--step)); }
   .acts.is-live .act--phone .chapter--facts { left: calc(var(--pad) + 2 * var(--step)); top: 39svh; width: calc(2.7 * var(--step)); }
   .acts.is-live .act--phone :is(.act__progress, .row) { right: var(--pad); width: var(--w3); }

@@ -4,6 +4,7 @@
 const PAPER = '244, 241, 234';
 const NIGHT = '11, 11, 10';
 const FONT = '"Malartre Texte", Georgia, serif';
+const MARGIN = 40;
 
 // Breaks a sentence into lines no wider than `width`.
 function wrap(ctx, text, width) {
@@ -66,8 +67,10 @@ export function createFinder(canvas) {
         ctx.font = `17px ${FONT}`;
         ctx.textAlign = right ? 'left' : 'right';
         ctx.textBaseline = 'middle';
-        const lines = wrap(ctx, text, 172);
         const x = end + (right ? 12 : -12);
+        // The sentence stays inside the frame, clear of the shot readout set along its right edge.
+        const room = right ? canvas.clientWidth - MARGIN - x : x - MARGIN;
+        const lines = wrap(ctx, text, Math.min(172, room));
         lines.forEach((line, i) => {
           const y = cy + (i - (lines.length - 1) / 2) * 21;
           ctx.fillStyle = `rgba(${PAPER}, ${named.toFixed(3)})`;

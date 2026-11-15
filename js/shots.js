@@ -23,12 +23,14 @@ export const PHONE_KEYS = {
     { at: 0.79, zoom: 1.45, u: 0.5, v: 0.33, fx: 0.5, fy: 0.37, ry: 0.13 },
     { at: 1, zoom: 1, u: 0.5, v: 0.5, fx: 0.5, fy: 0.45, ry: 0.3 },
   ],
+  // Wide screens: the phone stands a little right of centre, so that the giant word behind it
+  // shows its last letter (the t of UKit was hidden in every close-up).
   wide: [
-    { at: 0, zoom: 1, u: 0.5, v: 0.5, fx: 0.58, fy: 0.5, ry: -0.36 },
-    { at: 0.21, zoom: 1.3, u: 0.5, v: 0.3, fx: 0.58, fy: 0.43, ry: -0.14 },
-    { at: 0.515, zoom: 1.3, u: 0.5, v: 0.42, fx: 0.6, fy: 0.47, ry: 0.1 },
-    { at: 0.79, zoom: 1.3, u: 0.5, v: 0.42, fx: 0.58, fy: 0.47, ry: -0.1 },
-    { at: 1, zoom: 1, u: 0.5, v: 0.5, fx: 0.58, fy: 0.5, ry: 0.3 },
+    { at: 0, zoom: 1, u: 0.5, v: 0.5, fx: 0.64, fy: 0.5, ry: -0.36 },
+    { at: 0.21, zoom: 1.3, u: 0.5, v: 0.3, fx: 0.64, fy: 0.43, ry: -0.14 },
+    { at: 0.515, zoom: 1.3, u: 0.5, v: 0.42, fx: 0.66, fy: 0.47, ry: 0.1 },
+    { at: 0.79, zoom: 1.3, u: 0.5, v: 0.42, fx: 0.64, fy: 0.47, ry: -0.1 },
+    { at: 1, zoom: 1, u: 0.5, v: 0.5, fx: 0.64, fy: 0.5, ry: 0.3 },
   ],
 };
 
