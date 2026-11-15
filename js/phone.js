@@ -21,7 +21,7 @@ const NOTCH_H = 5.5 * MM;
 export const PHONE_MM = MM;
 export const PHONE_WIDTH = BODY_W;
 export const PHONE_HEIGHT = BODY_H;
-export const PHONE_SCREENS = 3;
+export const PHONE_SCREENS = 4;
 
 // The notch: a tab hanging from the top edge of the display, flared where it meets the edge.
 function notchShape() {
@@ -82,7 +82,8 @@ export function createPhone(onReady, onDetail) {
   backGlass.position.z = -DEPTH / 2 - 0.0006;
   group.add(backGlass);
 
-  // The three app screens sit side by side in one image; sliding the window swipes between them.
+  // The app screens sit side by side in one image (the welcome page of the onboarding, then
+  // timetable, campus, studies); sliding the window swipes between them.
   const texture = loadTexture('img/ukit-screens.jpg', onReady);
   const display = screenMaterial(texture, loadTexture('img/ukit-screens-soft.jpg', onDetail));
   display.uniforms.size.value.set(SCREEN_W, SCREEN_H);
@@ -171,7 +172,7 @@ export function createPhone(onReady, onDetail) {
       [[-0.5, 0.5], [0.5, 0.5], [0.5, -0.5], [-0.5, -0.5]].forEach(([cx, cy], i) => { out[i].copy(screen.localToWorld(corner.set(cx * w + x, cy * h + y, 0))); });
       return out;
     },
-    // 0, 1, 2 are the screens; values in between are mid-swipe.
+    // 0 to 3 are the screens; values in between are mid-swipe.
     setScreen(position) {
       shown = Math.min(Math.max(position, 0), PHONE_SCREENS - 1);
       display.uniforms.view.value.z = shown / PHONE_SCREENS;

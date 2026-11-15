@@ -107,7 +107,7 @@
 .acts:not(.is-live) .act__still { display: block; margin: 0 auto 26px; }
 .acts:not(.is-live) .act__still img { height: auto; }
 .acts:not(.is-live) .act--phone .act__still { width: 62%; aspect-ratio: 390 / 844; overflow: hidden; border-radius: 30px; }
-.acts:not(.is-live) .act--phone .act__still img { width: 300%; max-width: none; }
+.acts:not(.is-live) .act--phone .act__still img { width: 400%; max-width: none; }
 .acts:not(.is-live) .act--laptop .act__still { aspect-ratio: 16 / 10; overflow: hidden; }
 .acts:not(.is-live) .chapters { display: block; }
 .acts:not(.is-live) .chapter { opacity: 1; transform: none; padding: 10px 0 12px; border-top: 1px solid rgba(244, 241, 234, 0.3); }

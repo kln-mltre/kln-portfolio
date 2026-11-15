@@ -153,9 +153,11 @@ export function initStage({ acts, still, reduced, mono }) {
     g.scale.setScalar(fit.phone * look.zoom * lerp(0.82, 1, enter));
     frame(g, (out) => phone.glass(look.u, look.v, out), look.fx, look.fy);
     g.position.y += lerp(-0.5, 0, enter) + exit * 3.4 + float;
+    // The welcome page of the app while the phone comes in and the opening line is read, then
+    // one screen per chapter (data-at in index.html).
     phone.setScreen(reduced
-      ? Math.round(span(t, 0.15, 0.85) * 2)
-      : soft(span(t, 0.29, 0.41)) + soft(span(t, 0.61, 0.73)));
+      ? (t < 0.1 ? 0 : t < 0.35 ? 1 : t < 0.67 ? 2 : 3)
+      : soft(span(t, 0.09, 0.19)) + soft(span(t, 0.29, 0.41)) + soft(span(t, 0.61, 0.73)));
     // The app's colours come in as the phone turns to face the reader.
     phone.setColour(mono ? 0 : soft(span(v, -0.3, 0.16)));
   }
