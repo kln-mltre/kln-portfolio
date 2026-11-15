@@ -175,7 +175,7 @@ img { display: block; max-width: 100%; }
   .credit { font-size: 12.5px; }
   .facts { font-size: 15px; }
   .row { font-size: 23px; }
-  .bar { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); padding: 22px var(--pad); font-size: 26px; letter-spacing: -0.01em; }
+  .bar { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); padding: 22px var(--pad); font-size: clamp(20px, 1.8vw, 26px); letter-spacing: -0.01em; }
   .bar__name { grid-column: 1 / span 4; }
   .bar__nav { display: block; grid-column: 7 / span 5; }
   .bar__contact { grid-column: 12; justify-self: end; padding: 6px 18px 8px; }

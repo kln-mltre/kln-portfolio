@@ -97,6 +97,14 @@
 .cover__proofs .row { padding: 10px 0 12px; font-size: 20px; }
 .bar[data-in] { opacity: var(--k); }
 
+/* The smallest phones (320 px across): the foot of the cover was so tall that its sentence rose
+   over the lit part of the photograph. Smaller, it sits on the dark of the veil again. */
+@media (max-width: 359px) {
+  .cover__line { font-size: 16px; }
+  .cover__proofs { margin-top: 10px; }
+  .cover__proofs .row { padding: 8px 0 10px; font-size: 17px; }
+}
+
 @media (min-width: 900px) {
   .cover__layer { inset: 0; }
   .cover__layer img { object-position: 50% 37%; }
@@ -110,7 +118,13 @@
   }
   .cover__credit { right: 15px; top: 50%; }
   .cover__foot { padding: 0 var(--pad) 34px; display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); align-items: end; }
-  .cover__line { grid-column: 1 / span 3; font-size: 26px; line-height: 1.2; max-width: 17ch; }
+  /* Set for 1440 px; narrower, they follow the width, so that the two corners keep their lines. */
+  .cover__line { grid-column: 1 / span 3; font-size: clamp(20px, 1.8vw, 26px); line-height: 1.2; max-width: 17ch; }
   .cover__proofs { grid-column: 10 / span 3; margin: 0; }
-  .cover__proofs .row { padding: 11px 0 13px; font-size: 22px; }
+  .cover__proofs .row { padding: 11px 0 13px; font-size: clamp(18px, 1.53vw, 22px); }
+}
+/* Below 1200 px three columns are too narrow for a proof on one line: it takes four, still
+   ending under the contact button. */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .cover__proofs { grid-column: 9 / span 4; }
 }

@@ -102,7 +102,8 @@
   .count__grid { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); margin-top: 44px; }
   /* The large figure runs off the left edge by the width of its first stroke. */
   .count__figure { grid-column: 1 / span 9; justify-self: start; margin-left: -1.4vw; font-size: 36.9vw; }
-  .count__text { grid-column: 9 / span 4; align-self: start; margin: 4.4vw 0 0; font-size: 26px; line-height: 1.2; }
+  /* The words of the numbers are set for 1440 px and follow the width below it (cramped at 1024 px). */
+  .count__text { grid-column: 9 / span 4; align-self: start; margin: 4.4vw 0 0; font-size: clamp(20px, 1.8vw, 26px); line-height: 1.2; }
   .tally { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); margin-top: 60px; align-items: start; }
   .tally li, .tally li + li { width: auto; margin: 0; padding-top: 12px; }
   .tally li:nth-child(1) { grid-column: 2 / span 4; }
@@ -111,7 +112,7 @@
   .tally__figure { font-size: 15.3vw; }
   .tally li:nth-child(2) .tally__figure { font-size: 10.2vw; }
   .tally li:nth-child(3) .tally__figure { font-size: 6.8vw; }
-  .tally__text { margin-top: 14px; max-width: 24ch; padding-left: 1.4em; text-indent: -1.4em; font-size: 19px; }
+  .tally__text { margin-top: 14px; max-width: 24ch; padding-left: 1.4em; text-indent: -1.4em; font-size: clamp(16px, 1.32vw, 19px); }
 
   .services { padding-bottom: 170px; }
   .services__list { margin-top: 54px; }
