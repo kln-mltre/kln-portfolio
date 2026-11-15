@@ -69,7 +69,7 @@ export function initStage({ acts, still, reduced, mono }) {
     pending -= 1;
     if (pending === 0) { draw(); resolveReady(); }
   };
-  const refined = () => { dirty = true; };
+  const refined = () => { dirty = true; if (pending === 0) idle(warm, { timeout: 2000 }); };
   const phone = createPhone(loaded, refined);
   const laptop = createLaptop(loaded, refined);
   scene.add(phone.group, laptop.group);
@@ -269,6 +269,27 @@ export function initStage({ acts, still, reduced, mono }) {
   };
   requestAnimationFrame(loop);
 
+  // What the first sight of each object would cost in the middle of a scroll, paid while the
+  // page is still: every shader compiled and every picture sent to the graphics chip (the page
+  // of tlperf.com alone is some 48 MB once decoded). On a modest machine that first sight froze
+  // the page for a moment as the phone or the laptop came in.
+  const warm = () => {
+    const shown = [phone.group.visible, laptop.group.visible];
+    phone.group.visible = true;
+    laptop.group.visible = true;
+    renderer.compile(scene, camera);
+    [phone.group.visible, laptop.group.visible] = shown;
+    const textures = new Set();
+    scene.traverse((object) => {
+      [].concat(object.material || []).forEach((material) => {
+        Object.values(material).forEach((value) => { if (value && value.isTexture) textures.add(value); });
+        Object.values(material.uniforms || {}).forEach(({ value }) => { if (value && value.isTexture) textures.add(value); });
+      });
+    });
+    textures.forEach((texture) => { if (texture.image) renderer.initTexture(texture); });
+  };
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 200));
+  ready.then(() => idle(warm, { timeout: 2000 }));
 
   return ready.then(() => ({ draw }));
 }
